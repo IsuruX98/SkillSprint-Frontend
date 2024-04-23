@@ -1,117 +1,72 @@
-# AstroNexus
+# SkillSprint
 
-AstroNexus is a React frontend application developed as part of the assignment for SE3040 – Application Frameworks, BSc (Hons) in Information Technology, specialized in Software Engineering, 3rd Year at SLIIT.
+SkillSprint is an educational platform developed to offer a wide range of courses to learners. It provides a user-friendly web/mobile interface for browsing, enrolling in, and accessing courses. Instructors can manage course content, and learners can track their progress and enroll in multiple courses simultaneously.
 
-## Overview
+## Getting Started
 
-AstroNexus is a creative frontend application that utilizes NASA's public APIs to provide users with daily or historical astronomy-related data. Users can explore various endpoints such as Mars Rover Photos, Astronomy Picture of the Day, and Earth imagery APIs. The application aims to showcase skills in front-end development, API integration, usability enhancement through Tailwind CSS framework, user session management, version control with Git, deployment, and testing.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-## Features
+### Prerequisites
 
-- View daily or historical astronomy-related data.
-- Integration with at least two different endpoints from NASA's APIs.
-- User authentication using JWT for accessing personalized features.
-- Dynamic display of data based on user input or interactions.
-- Responsive design for consistent experience across different devices and screen sizes.
+Before you begin, ensure you have met the following requirements:
+* [Node.js](https://nodejs.org/) installed on your machine.
+* [Docker](https://www.docker.com/) installed and running.
+* [Kubernetes](https://kubernetes.io/) installed and configured.
 
-## Technology Stack
-
-### Frontend
-
-- React (with functional components)
-- Language: JavaScript
-- CSS Framework: Tailwind CSS
-
-### Backend
-
-- Node.js
-- Express.js
-- MongoDB
-- JWT for authentication
-
-### Hosting
-
-- frontend - Vercel
-- backend - Render
-
-### Session Management
-
-- Implemented using JWT
-
-### Version Control
-
-- Git
-
-## Setup Instructions
-
-### Frontend
+### Installation
 
 1. Clone the repository:
+   ```sh
+   git clone <repository-url>
+   ```
+2. Navigate to the project directory:
+   ```sh
+   cd SkillSprint
+   ```
+3. Install dependencies for the backend and frontend:
+   ```sh
+   cd backend
+   npm install
+   cd ../frontend
+   npm install
+   ```
 
-```bash
-git clone https://github.com/yourusername/AstroNexus.git
-```
+## Usage
 
-2. Navigate to the frontend directory:
+1. Start the backend server:
+   ```sh
+   cd ../backend
+   npm start
+   ```
+2. Start the frontend server:
+   ```sh
+   cd ../frontend
+   npm start
+   ```
+3. Open your browser and navigate to `http://localhost:3000` to access the SkillSprint web interface.
 
-```bash
-cd AstroNexus/frontend
-```
+## Deployment
 
-3. Install dependencies:
+To deploy SkillSprint on a production system, follow these steps:
+1. Build Docker images for the backend and frontend:
+   ```sh
+   docker build -t skillsprint-backend ./backend
+   docker build -t skillsprint-frontend ./frontend
+   ```
+2. Tag the Docker images:
+   ```sh
+   docker tag skillsprint-backend <your-dockerhub-username>/skillsprint-backend
+   docker tag skillsprint-frontend <your-dockerhub-username>/skillsprint-frontend
+   ```
+3. Push the Docker images to Docker Hub:
+   ```sh
+   docker push <your-dockerhub-username>/skillsprint-backend
+   docker push <your-dockerhub-username>/skillsprint-frontend
+   ```
+4. Deploy the Docker images to Kubernetes:
+   ```sh
+   kubectl apply -f kubernetes/deployment.yaml
+   ```
 
-```bash
-npm install
-```
+## Contributers
 
-4. Start the development server:
-
-```bash
-npm start
-```
-
-5. Open your browser and visit `http://localhost:3000` to view the frontend application.
-
-### Backend
-
-1. Navigate to the backend directory:
-
-```bash
-cd AstroNexus/backend
-```
-
-2. Install dependencies:
-
-```bash
-npm install
-```
-
-3. Start the server:
-
-```bash
-npm start
-```
-
-## API Usage
-
-To utilize NASA's APIs, you need to obtain an API key from the NASA API portal and add it to your environment variables or directly in the code where API requests are made. Ensure to follow security best practices in handling API keys.
-
-## Documentation
-
-### Application Structure
-
-The project follows a standard React application structure with components organized in a modular manner under the `frontend/src/components` directory. Stylesheets are implemented using Tailwind CSS.
-
-The backend follows the MVC (Model-View-Controller) architecture with routes, controllers, and models organized under the `backend/routes`, `backend/controllers`, and `backend/models` directories, respectively.
-
-### Testing
-
-Comprehensive unit and integration tests are implemented using Jest and React Testing Library for the frontend, and Mocha and Chai for the backend. Tests cover critical functionalities and components of the application to ensure correctness and reliability.
-
-### Deployment
-
-The application is deployed on [Hosting Platform](URL). Visit the deployed application [here](URL).
-
-## Report
-
-For a detailed report discussing the chosen APIs, challenges faced, and their resolutions, refer to the `report.md` file in the root directory of the repository.
