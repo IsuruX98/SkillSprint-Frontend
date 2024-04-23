@@ -3,6 +3,10 @@ import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/NavBar/Navbar";
 import Hero from "../components/Hero/Hero";
+import FeaturedCourses from "../components/FeaturedCourses/FeaturedCourses";
+import Services from "../components/Services/Services";
+import FAQ from "../components/FAQ/FAQ";
+import Footer from "../components/Footer/Footer";
 
 const Home = () => {
   const { user } = useAuth();
@@ -12,14 +16,10 @@ const Home = () => {
     <div>
       <Navbar />
       <Hero />
-      <h2>Welcome to the Home Page</h2>
-      {user && (
-        <div>
-          <p>Name: {user.name}</p>
-          <p>Email: {user.email}</p>
-          {/* Add other user details here */}
-        </div>
-      )}
+      <Services />
+      <FeaturedCourses />
+      <FAQ />
+      <Footer />
     </div>
   );
 };
