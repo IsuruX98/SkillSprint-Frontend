@@ -10,6 +10,7 @@ const AuthModal = ({ isOpen, onClose, mode }) => {
     email: "",
     mobile: "",
     password: "",
+    confirmPassword: "", // New state for confirm password
   });
 
   const handleToggle = () => {
@@ -31,6 +32,12 @@ const AuthModal = ({ isOpen, onClose, mode }) => {
           console.error("Login failed:", response.error);
         }
       } else {
+        // Check if passwords match
+        if (formData.password !== formData.confirmPassword) {
+          console.error("Passwords do not match");
+          return;
+        }
+
         const response = await register(formData);
         if (response.success) {
           console.log(response);
@@ -127,6 +134,24 @@ const AuthModal = ({ isOpen, onClose, mode }) => {
                     className="w-full px-3 py-2 border rounded-md"
                   />
                 </div>
+                {!isLogin && (
+                  <div className="mb-4">
+                    <label
+                      htmlFor="confirmPassword"
+                      className="block text-sm font-medium text-black"
+                    >
+                      Confirm Password:
+                    </label>
+                    <input
+                      type="password"
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 border rounded-md"
+                    />
+                  </div>
+                )}
                 <button
                   type="submit"
                   className="w-full bg-black text-white py-2 rounded-md"

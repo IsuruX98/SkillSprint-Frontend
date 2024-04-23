@@ -6,7 +6,7 @@ const Footer = () => {
     <footer className="bg-gray-900 text-gray-300 py-8">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-4 md:mb-0">
+          <div className="mb-4 md:mb-0 text-center md:text-left">
             <h2 className="text-2xl font-bold mb-2">SkillSprint</h2>
             <p className="text-sm">
               A platform to enhance your skills and knowledge.
