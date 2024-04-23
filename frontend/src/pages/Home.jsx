@@ -4,13 +4,8 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/NavBar/Navbar";
 
 const Home = () => {
-  const { user, isLoggedIn } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
-
-  if (!isLoggedIn) {
-    // If user is already logged in, redirect to home page
-    navigate("/login");
-  }
 
   return (
     <div>
