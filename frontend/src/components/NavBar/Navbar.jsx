@@ -54,7 +54,7 @@ const Navbar = () => {
           placeholder="what do you want to learn..."
           value={searchQuery}
           onChange={handleSearchChange}
-          className="px-4 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-black w-64"
+          className="px-4 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 w-64"
         />
         <Link to="Education" spy={true} smooth={true} duration={500}>
           <div className="cursor-pointer">Online Courses</div>
@@ -74,7 +74,7 @@ const Navbar = () => {
         </button>
         <button
           onClick={handleRegisterModal}
-          className="flex items-center justify-center gap-2 px-8 py-2 my-1 bg-transparent border-2 border-black text-black rounded-full hover:bg-[#1A1A1A] hover:text-white transition duration-300"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
         >
           Join for Free
         </button>
