@@ -12,6 +12,7 @@ const Navbar = () => {
   const [showRegister, setShowRegister] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleNav = () => {
     setNav(!nav);
@@ -45,27 +46,81 @@ const Navbar = () => {
       </div>
 
       {/* Main Navigation Links */}
-      <div className="items-center hidden space-x-12 lg:flex text-black">
-        <div className="flex items-center text-black">
+      <div className="items-center hidden lg:flex text-black">
+        <div className="flex items-center">
           <h3 className="font-extrabold text-black">
             <Link to="home" spy={true} smooth={true} duration={500}>
               <div className="cursor-pointer text-2xl">SkillSprint</div>
             </Link>
           </h3>
         </div>
-        <input
-          type="text"
-          placeholder="what do you want to learn..."
-          value={searchQuery}
-          onChange={handleSearchChange}
-          className="px-4 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 w-64"
-        />
-        <Link to="Education" spy={true} smooth={true} duration={500}>
-          <div className="cursor-pointer">Online Courses</div>
-        </Link>
-        <Link to="Skills" spy={true} smooth={true} duration={500}>
-          <div className="cursor-pointer">Online Degrees</div>
-        </Link>
+        <div className="flex-grow mx-4">
+          <input
+            type="text"
+            placeholder="What do you want to learn..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="px-4 py-1 border rounded-xl focus:outline-none focus:border-blue-500 w-64"
+          />
+        </div>
+        <div className="relative inline-block text-left">
+          <button
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+            type="button"
+            className="inline-flex justify-center w-full rounded-xl px-4 py-2 text-sm border font-medium focus:border-blue-500 lg:w-auto"
+            aria-expanded="true"
+            aria-haspopup="true"
+          >
+            Explore more
+            <svg
+              className="-mr-1 ml-2 h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fillRule="evenodd"
+                d="M6.293 7.293a1 1 0 011.414 0L10 9.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+          {dropdownOpen && (
+            <div
+              className="origin-top-left absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+              role="menu"
+              aria-orientation="vertical"
+            >
+              <div className="py-1" role="none">
+                <Link
+                  to="/"
+                  onClick={() => setDropdownOpen(false)}
+                  className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 hover:text-gray-900"
+                  role="menuitem"
+                >
+                  Sub Page 1
+                </Link>
+                <Link
+                  to="/"
+                  onClick={() => setDropdownOpen(false)}
+                  className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 hover:text-gray-900"
+                  role="menuitem"
+                >
+                  Sub Page 2
+                </Link>
+                <Link
+                  to="/"
+                  onClick={() => setDropdownOpen(false)}
+                  className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 hover:text-gray-900"
+                  role="menuitem"
+                >
+                  Sub Page 3
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Auth Links or User Profile Button */}
@@ -73,7 +128,7 @@ const Navbar = () => {
         {user ? (
           <button
             onClick={() => setShowProfileModal(true)}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-semibold text-[#4f46e5] shadow-sm transition-all duration-150 hover:bg-[#d1d5db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-semibold text-blue-500 shadow-sm border transition-all duration-150 hover:bg-[#d1d5db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
           >
             <AiOutlineUser />
             {user.name}
@@ -146,36 +201,67 @@ const Navbar = () => {
             <h1 className="text-2xl font-bold">SkillSprint</h1>
           </Link>
         </h1>
-        <ul className="p-4 mt-20 text-black">
+        <ul className="p-4 mt-20">
           {/* Render the same navigation links as in large screen */}
-          <li className="p-4 border-b border-gray-600 hover:text-lg hover:font-bold">
+          <li className="p-4 hover:bg-gray-100 hover:text-blue-500">
             <Link
-              to="Education"
+              to="/"
               onClick={() => {
                 setNav(false);
               }}
-              spy={true}
-              smooth={true}
-              duration={500}
             >
-              <div className="cursor-pointer">Online Courses</div>
+              <div className="cursor-pointer">sub page 01</div>
             </Link>
           </li>
-          <li className="p-4 border-b border-gray-600 hover:text-lg hover:font-bold">
+          <li className="p-4 hover:bg-gray-100 hover:text-blue-500">
             <Link
-              to="Skills"
+              to="/"
               onClick={() => {
                 setNav(false);
               }}
-              spy={true}
-              smooth={true}
-              duration={500}
             >
-              <div className="cursor-pointer">Online Degrees</div>
+              <div className="cursor-pointer">sub page 02</div>
+            </Link>
+          </li>
+          <li className="p-4 hover:bg-gray-100 hover:text-blue-500">
+            <Link
+              to="/"
+              onClick={() => {
+                setNav(false);
+              }}
+            >
+              <div className="cursor-pointer">sub page 03</div>
             </Link>
           </li>
           {/* Add any additional links here */}
         </ul>
+        {/* Sign In and Sign Up buttons */}
+        <div className="flex flex-col mx-5">
+          {user ? (
+            <button
+              onClick={() => setShowProfileModal(true)}
+              className="inline-flex mt-8 items-center justify-center gap-2 rounded-md bg-white px-4 py-2 text-sm font-semibold text-blue-500 border shadow-sm transition-all duration-150 hover:bg-[#d1d5db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            >
+              <AiOutlineUser />
+              {user.name}
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={handleLoginModal}
+                className="mt-4 py-2 px-4 border rounded-md text-sm font-medium text-blue-500 hover:bg-blue-100 hover:text-blue-700"
+              >
+                Sign In
+              </button>
+              <button
+                onClick={handleRegisterModal}
+                className="mt-4 py-2 px-4 border rounded-md text-sm font-medium text-white bg-blue-500 hover:bg-blue-600"
+              >
+                Sign Up for Free
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </nav>
   );
