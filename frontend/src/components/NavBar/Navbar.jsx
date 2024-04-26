@@ -49,7 +49,7 @@ const Navbar = () => {
       <div className="items-center hidden lg:flex text-black">
         <div className="flex items-center">
           <h3 className="font-extrabold text-black">
-            <Link to="home" spy={true} smooth={true} duration={500}>
+            <Link to="/" spy={true} smooth={true} duration={500}>
               <div className="cursor-pointer text-2xl">SkillSprint</div>
             </Link>
           </h3>
@@ -94,12 +94,12 @@ const Navbar = () => {
             >
               <div className="py-1" role="none">
                 <Link
-                  to="/"
+                  to="/courses"
                   onClick={() => setDropdownOpen(false)}
                   className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 hover:text-gray-900"
                   role="menuitem"
                 >
-                  Sub Page 1
+                  Explore courses
                 </Link>
                 <Link
                   to="/"
@@ -205,12 +205,12 @@ const Navbar = () => {
           {/* Render the same navigation links as in large screen */}
           <li className="p-4 hover:bg-gray-100 hover:text-blue-500">
             <Link
-              to="/"
+              to="/courses"
               onClick={() => {
                 setNav(false);
               }}
             >
-              <div className="cursor-pointer">sub page 01</div>
+              <div className="cursor-pointer">Explore courses</div>
             </Link>
           </li>
           <li className="p-4 hover:bg-gray-100 hover:text-blue-500">
