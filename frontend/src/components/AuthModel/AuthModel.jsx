@@ -109,14 +109,14 @@ const AuthModal = ({ isOpen, onClose, mode }) => {
     <>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-gray-900 p-8 rounded-lg w-96">
+          <div className="bg-white p-8 rounded-lg w-96">
             <div>
               <div className="flex justify-between">
-                <h2 className="text-2xl font-bold mb-4 text-white">
+                <h2 className="text-2xl font-bold mb-4 text-black">
                   {isLogin ? "Login" : "Register"}
                 </h2>
                 <button onClick={onClose}>
-                  <AiOutlineClose className="text-white" />
+                  <AiOutlineClose className="text-black" />
                 </button>
               </div>
 
@@ -138,13 +138,13 @@ const AuthModal = ({ isOpen, onClose, mode }) => {
                     />
                   )}
 
-                  <p className="text-white mt-4">
+                  <p className="text-black mt-4">
                     {isLogin
                       ? "Don't have an account?"
                       : "Already have an account?"}
                     <button
                       onClick={handleToggle}
-                      className="text-white ml-1 underline"
+                      className="text-black ml-1 underline"
                     >
                       {isLogin ? "Register" : "Login"}
                     </button>
