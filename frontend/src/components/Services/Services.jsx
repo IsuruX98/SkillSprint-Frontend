@@ -49,7 +49,7 @@ const categories = [
 
 const Services = () => {
   return (
-    <div className="px-4 py-8 lg:px-24 lg:py-12 bg-gray-100">
+    <div className="pb-20 pt-32 lg:px-32 px-12 bg-gray-100">
       <div className="max-w-6xl mx-auto">
         <div className="mb-12 text-center">
           <span className="text-blue-500 text-lg font-semibold mb-2 block">

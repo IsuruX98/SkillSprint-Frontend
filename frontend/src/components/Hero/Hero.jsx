@@ -1,5 +1,6 @@
 import React from "react";
 import { Link as Scroll } from "react-scroll";
+import heroImg from "../../assets/images/hero.webp";
 
 const Hero = () => {
   return (
@@ -74,7 +75,7 @@ const Hero = () => {
         <div className="relative mx-auto mt-10 max-w-lg">
           <img
             className="w-full rounded-2xl border border-gray-100 shadow"
-            src="https://img.freepik.com/free-photo/happy-young-female-student-holding-notebooks-from-courses-smiling-camera-standing-spring-clothes-against-blue-background_1258-70161.jpg?w=1380&t=st=1713858661~exp=1713859261~hmac=0b0241620ef8a009f48fe80aeb1c4176c3afc4025d50a612d004855fc672b009"
+            src={heroImg}
             alt="SkillSprint Courses"
           />
         </div>
