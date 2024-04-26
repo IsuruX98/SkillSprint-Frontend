@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { useAuth } from "../../context/authContext";
 import { AiOutlineClose } from "react-icons/ai";
+import LoginForm from "../LoginForm/LoginForm";
+import RegisterForm from "../RegisterForm/RegisterForm";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import {
+  SuccessNotification,
+  ErrorNotification,
+} from "../../notifications/notifications";
 
 const AuthModal = ({ isOpen, onClose, mode }) => {
   const [isLogin, setIsLogin] = useState(mode === "login");
@@ -10,8 +17,9 @@ const AuthModal = ({ isOpen, onClose, mode }) => {
     email: "",
     mobile: "",
     password: "",
-    confirmPassword: "", // New state for confirm password
+    confirmPassword: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleToggle = () => {
     setIsLogin(!isLogin);
@@ -23,152 +31,127 @@ const AuthModal = ({ isOpen, onClose, mode }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       if (isLogin) {
         const response = await login(formData);
         if (response.success) {
-          console.log(response);
+          SuccessNotification("Logged in successfully");
+          onClose();
         } else {
-          console.error("Login failed:", response.error);
+          ErrorNotification(response.error);
         }
       } else {
-        // Check if passwords match
-        if (formData.password !== formData.confirmPassword) {
-          console.error("Passwords do not match");
+        if (!validateFormData()) {
+          setLoading(false);
           return;
         }
-
         const response = await register(formData);
         if (response.success) {
-          console.log(response);
+          SuccessNotification("Registered successfully");
+          onClose();
         } else {
-          console.error("Register failed:", response.error);
+          ErrorNotification(response.error);
         }
       }
     } catch (error) {
       console.error("Error:", error.response ? error.response.data : error);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const validateFormData = () => {
+    const { name, email, mobile, password, confirmPassword } = formData;
+
+    if (!isLogin && password !== confirmPassword) {
+      ErrorNotification("Passwords do not match");
+      return false;
+    }
+
+    if (!name.trim()) {
+      ErrorNotification("Name is required");
+      return false;
+    }
+
+    if (!email.trim()) {
+      ErrorNotification("Email is required");
+      return false;
+    } else if (!isValidEmail(email)) {
+      ErrorNotification("Invalid email address");
+      return false;
+    }
+
+    if (!mobile.trim()) {
+      ErrorNotification("Mobile is required");
+      return false;
+    } else if (!isValidMobile(mobile)) {
+      ErrorNotification("Invalid mobile number");
+      return false;
+    }
+
+    return true;
+  };
+
+  const isValidEmail = (email) => {
+    // Basic email format validation using regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const isValidMobile = (mobile) => {
+    // Basic mobile number validation (10 digits)
+    const mobileRegex = /^\d{10}$/;
+    return mobileRegex.test(mobile);
   };
 
   return (
     <>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg w-96">
+          <div className="bg-gray-900 p-8 rounded-lg w-96">
             <div>
               <div className="flex justify-between">
-                <h2 className="text-2xl font-bold mb-4">
+                <h2 className="text-2xl font-bold mb-4 text-white">
                   {isLogin ? "Login" : "Register"}
                 </h2>
                 <button onClick={onClose}>
-                  <AiOutlineClose />
+                  <AiOutlineClose className="text-white" />
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit}>
-                {!isLogin && (
-                  <div className="mb-4">
-                    <label
-                      htmlFor="name"
-                      className="block text-sm font-medium text-black"
-                    >
-                      Name:
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
+              {loading ? (
+                <LoadingSpinner />
+              ) : (
+                <>
+                  {isLogin ? (
+                    <LoginForm
+                      onSubmit={handleSubmit}
+                      formData={formData}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border rounded-md"
                     />
-                  </div>
-                )}
-                <div className="mb-4">
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-black"
-                  >
-                    Email:
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded-md"
-                  />
-                </div>
-                {!isLogin && (
-                  <div className="mb-4">
-                    <label
-                      htmlFor="mobile"
-                      className="block text-sm font-medium text-black"
-                    >
-                      Mobile:
-                    </label>
-                    <input
-                      type="text"
-                      id="mobile"
-                      name="mobile"
-                      value={formData.mobile}
+                  ) : (
+                    <RegisterForm
+                      onSubmit={handleSubmit}
+                      formData={formData}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border rounded-md"
                     />
-                  </div>
-                )}
-                <div className="mb-4">
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium text-black"
-                  >
-                    Password:
-                  </label>
-                  <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded-md"
-                  />
-                </div>
-                {!isLogin && (
-                  <div className="mb-4">
-                    <label
-                      htmlFor="confirmPassword"
-                      className="block text-sm font-medium text-black"
+                  )}
+
+                  <p className="text-white mt-4">
+                    {isLogin
+                      ? "Don't have an account?"
+                      : "Already have an account?"}
+                    <button
+                      onClick={handleToggle}
+                      className="text-white ml-1 underline"
                     >
-                      Confirm Password:
-                    </label>
-                    <input
-                      type="password"
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      value={formData.confirmPassword}
-                      onChange={handleChange}
-                      className="w-full px-3 py-2 border rounded-md"
-                    />
-                  </div>
-                )}
-                <button
-                  type="submit"
-                  className="w-full bg-black text-white py-2 rounded-md"
-                >
-                  {isLogin ? "Login" : "Register"}
-                </button>
-              </form>
+                      {isLogin ? "Register" : "Login"}
+                    </button>
+                  </p>
+                </>
+              )}
             </div>
-            <p className="text-black mt-4">
-              {isLogin ? "Don't have an account?" : "Already have an account?"}
-              <button
-                onClick={handleToggle}
-                className="text-black ml-1 underline"
-              >
-                {isLogin ? "Register" : "Login"}
-              </button>
-            </p>
           </div>
         </div>
       )}

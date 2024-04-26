@@ -15,6 +15,17 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // Function to fetch user profile by ID
+  const fetchUserById = async (userId) => {
+    try {
+      const response = await axios.get(`user/profile/${userId}`);
+      const userData = response.data; // Assuming the response contains user data
+      setUser(userData); // Update the user state with the fetched user data
+    } catch (error) {
+      console.error("Error fetching user profile:", error.response.data);
+    }
+  };
+
   useEffect(() => {
     // Check if user is logged in based on the presence of JWT token in the cookie
     const jwtToken = Cookies.get("jwt");
@@ -46,10 +57,10 @@ export const AuthProvider = ({ children }) => {
 
       // Update user state
       setUser(response.data.user);
+
       return { success: true, data: response.data };
     } catch (error) {
-      console.error("Error logging in:", error.response.data);
-      return { success: false, error: error.response.data };
+      return { success: false, error: error.response.data.error };
     }
   };
 
@@ -69,10 +80,10 @@ export const AuthProvider = ({ children }) => {
 
       // Update user state
       setUser(response.data.user);
+
       return { success: true, data: response.data };
     } catch (error) {
-      console.error("Error registering user:", error.response.data);
-      return { success: false, error: error.response.data };
+      return { success: false, error: error.response.data.error };
     }
   };
 
@@ -83,17 +94,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     // Remove JWT token from cookie
     Cookies.remove("jwt");
-  };
-
-  // Function to fetch user profile by ID
-  const fetchUserById = async (userId) => {
-    try {
-      const response = await axios.get(`user/profile/${userId}`);
-      const userData = response.data; // Assuming the response contains user data
-      setUser(userData); // Update the user state with the fetched user data
-    } catch (error) {
-      console.error("Error fetching user profile:", error.response.data);
-    }
+    return { success: true, message: "logout successfully" };
   };
 
   return (
