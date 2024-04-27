@@ -9,6 +9,10 @@ import {
   BiMenu,
 } from "react-icons/bi";
 import { AiOutlineClose } from "react-icons/ai";
+import UserContent from "./Admin/UsersContent";
+import DashboardContent from "./Admin/DashboardContent";
+import CoursesContent from "./Admin/CoursesContent";
+import NotificationsContent from "./Admin/NotificationsContent";
 
 const Dashboard = () => {
   const [selectedMenuItem, setSelectedMenuItem] = useState("dashboard");
@@ -28,37 +32,15 @@ const Dashboard = () => {
       case "dashboard":
         return <DashboardContent />;
       case "users":
-        return <UsersContent />;
+        return <UserContent />;
       case "courses":
         return <CoursesContent />;
       case "notifications":
         return <NotificationsContent />;
-      case "logout":
-        return <LogoutContent />;
       default:
         return <DashboardContent />;
     }
   };
-
-  const DashboardContent = () => (
-    <div className="px-4 py-8">Dashboard Content Here</div>
-  );
-
-  const UsersContent = () => (
-    <div className="px-4 py-8">Users Content Here</div>
-  );
-
-  const CoursesContent = () => (
-    <div className="px-4 py-8">Courses Content Here</div>
-  );
-
-  const NotificationsContent = () => (
-    <div className="px-4 py-8">Notifications Content Here</div>
-  );
-
-  const LogoutContent = () => (
-    <div className="px-4 py-8">Logout Content Here</div>
-  );
 
   return (
     <div className="min-h-screen flex flex-row bg-gray-100">
@@ -137,7 +119,9 @@ const Dashboard = () => {
                   className={`flex flex-row items-center h-12 text-gray-700 hover:text-gray-900 hover:bg-gray-200 ${
                     selectedMenuItem === "logout" && "font-medium"
                   }`}
-                  onClick={() => handleMenuItemClick("logout")}
+                  onClick={() => {
+                    alert("logout...");
+                  }}
                 >
                   <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-500">
                     <BiLogOut />
@@ -219,7 +203,9 @@ const Dashboard = () => {
               className={`flex flex-row items-center h-12 text-gray-700 hover:text-gray-900 hover:bg-gray-200 ${
                 selectedMenuItem === "logout" && "font-medium"
               }`}
-              onClick={() => handleMenuItemClick("logout")}
+              onClick={() => {
+                alert("logout...");
+              }}
             >
               <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-500">
                 <BiLogOut />
