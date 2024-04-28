@@ -11,7 +11,9 @@ import {
 
 const AuthModal = ({ isOpen, onClose, mode }) => {
   const [isLogin, setIsLogin] = useState(mode === "login");
-  const { register, login } = useAuth();
+  // const { register, login } = useAuth();
+  const register = () => {};
+  const login = () => {};
   const [formData, setFormData] = useState({
     name: "",
     email: "",

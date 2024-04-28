@@ -6,7 +6,9 @@ import { useAuth } from "../../context/authContext";
 import UserProfileModal from "../UserProfileModal/UserProfileModal";
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
+  //const { user, logout } = useAuth();
+  const user = null;
+  const logout = () => {};
   const [nav, setNav] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);

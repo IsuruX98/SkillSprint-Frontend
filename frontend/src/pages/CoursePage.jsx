@@ -115,7 +115,7 @@ const CoursePage = () => {
     <div>
       <div className="bg-blue-500 text-white">
         <div className="lg:px-32 lg:py-12 px-12 py-12">
-          <h1 className="text-3xl font-semibold">Courses</h1>
+          <h1 className="text-3xl font-bold">Courses</h1>
           <p className="mt-2">Explore our range of courses</p>
         </div>
       </div>

@@ -9,9 +9,7 @@ const App = () => {
     <div>
       <BrowserRouter>
         <ReactNotifications />
-        <AuthProvider>
-          <Layout />
-        </AuthProvider>
+        <Layout />
       </BrowserRouter>
     </div>
   );
