@@ -152,14 +152,21 @@ const CourseDetail = () => {
             <h1 className="text-3xl font-semibold mb-4">{course.title}</h1>
             <p className="text-gray-600 mb-6">{course.description}</p>
 
-            <div className="flex items-center mb-4">
-              <BsFillStarFill className="text-yellow-500 mr-1" />
-              <p className="text-gray-700 mr-2">{course.rating}</p>
-              <p className="text-gray-700 mr-2">
-                ({course.enrolledCount} ratings)
-              </p>
-              <FaUserAlt className="text-gray-700 mr-1" />
-              <p className="text-gray-700">{course.level}</p>
+            <div className="flex flex-col gap-2 mb-4">
+              <div className="flex items-center">
+                <p className="text-gray-700 mr-2">{course.rating}</p>
+                <p className="text-gray-700 mr-2">
+                  ({course.enrolledCount} ratings)
+                </p>
+                <BsFillStarFill className="text-yellow-500 mr-1" />
+                <BsFillStarFill className="text-yellow-500 mr-1" />
+                <BsFillStarFill className="text-yellow-500 mr-1" />
+                <BsFillStarFill className="text-yellow-500 mr-1" />
+              </div>
+              <div className="flex items-center">
+                <FaUserAlt className="text-gray-700 mr-1" />
+                <p className="text-gray-700">{course.level}</p>
+              </div>
             </div>
 
             <div className="mb-4">
