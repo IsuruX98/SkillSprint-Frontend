@@ -20,7 +20,7 @@ const ModuleDetails = ({ module }) => {
         onClick={toggleAccordion}
         className="flex justify-between items-center w-full p-4 text-lg font-medium text-left focus:outline-none"
       >
-        <span>{module.title}</span>
+        <span className="md:text-lg text-sm">{module.title}</span>
         <svg
           className={`w-6 h-6 transition-transform duration-300 transform ${
             isOpen ? "rotate-90" : ""
@@ -79,7 +79,7 @@ const ModuleDetails = ({ module }) => {
           </div>
           <button
             onClick={navigateToLearnModule}
-            className="bg-blue-500 mt-5 hover:bg-blue-600 text-white py-2 px-4 rounded-md inline-block"
+            className="mt-5 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md block w-full"
           >
             Learn Module
           </button>
