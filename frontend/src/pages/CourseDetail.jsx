@@ -20,8 +20,60 @@ const CourseDetail = () => {
       "Algorithmic thinking",
     ],
     modules: [
-      { id: 1, title: "Module 1: Introduction to Programming" },
-      { id: 2, title: "Module 2: Variables and Data Types" },
+      {
+        id: 1,
+        title: "Module 1: Introduction to Programming",
+        videos: [
+          "Welcome to LTP - 0 minutes - Preview module",
+          "Installing Python - 2 minutes",
+          // Add more video details as needed
+        ],
+        readings: [
+          "Syllabus - 10 minutes",
+          "Course Logistics - 10 minutes",
+          // Add more reading details as needed
+        ],
+        quizzes: [
+          "Python, Variables, and Functions - 30 minutes",
+          // Add more quiz details as needed
+        ],
+      },
+      {
+        id: 2,
+        title: "Module 2: Variables and Data Types",
+        videos: [
+          "Introduction to Variables - 5 minutes",
+          "Data Types in Python - 10 minutes",
+          // Add more video details as needed
+        ],
+        readings: [
+          "Variables and Memory Allocation - 15 minutes",
+          "Primitive and Non-Primitive Data Types - 20 minutes",
+          // Add more reading details as needed
+        ],
+        quizzes: [
+          "Variables Quiz - 20 minutes",
+          // Add more quiz details as needed
+        ],
+      },
+      {
+        id: 3,
+        title: "Module 3: Control Flow",
+        videos: [
+          "Conditional Statements - 8 minutes",
+          "Loops in Python - 12 minutes",
+          // Add more video details as needed
+        ],
+        readings: [
+          "If-else Statements - 10 minutes",
+          "For and While Loops - 15 minutes",
+          // Add more reading details as needed
+        ],
+        quizzes: [
+          "Control Flow Quiz - 25 minutes",
+          // Add more quiz details as needed
+        ],
+      },
       // Add more modules as needed
     ],
   });
@@ -90,7 +142,7 @@ const CourseDetail = () => {
         <div className="bg-white shadow-md rounded-lg px-6 py-8 mt-8">
           <h2 className="text-xl font-semibold mb-4">Modules</h2>
           {course.modules.map((module) => (
-            <ModuleDetails key={module.id} moduleName={module.title} />
+            <ModuleDetails key={module.id} module={module} />
           ))}
         </div>
       </div>

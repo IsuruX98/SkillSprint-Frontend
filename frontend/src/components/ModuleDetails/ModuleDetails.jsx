@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const ModuleDetails = ({ moduleName }) => {
+const ModuleDetails = ({ module }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleAccordion = () => {
@@ -13,7 +13,7 @@ const ModuleDetails = ({ moduleName }) => {
         onClick={toggleAccordion}
         className="flex justify-between items-center w-full p-4 text-lg font-medium text-left focus:outline-none"
       >
-        <span>{moduleName}</span>
+        <span>{module.title}</span>
         <svg
           className={`w-6 h-6 transition-transform duration-300 transform ${
             isOpen ? "rotate-90" : ""
@@ -21,6 +21,7 @@ const ModuleDetails = ({ moduleName }) => {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
+          aria-hidden="true"
         >
           <path
             fillRule="evenodd"
@@ -31,31 +32,35 @@ const ModuleDetails = ({ moduleName }) => {
       </button>
       {isOpen && (
         <div className="p-4 border-t border-gray-200">
-          {/* Include your module details here */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <h3 className="text-lg font-medium">8 videos</h3>
+              <h3 className="text-lg font-medium">Videos</h3>
               <ul className="mt-2 space-y-1">
-                <li>Welcome to LTP - 0 minutes - Preview module</li>
-                <li>Installing Python - 2 minutes</li>
-                {/* Add more video details */}
+                {module.videos.map((video, index) => (
+                  <li key={index}>{video}</li>
+                ))}
               </ul>
             </div>
             <div>
-              <h3 className="text-lg font-medium">10 readings</h3>
+              <h3 className="text-lg font-medium">Readings</h3>
               <ul className="mt-2 space-y-1">
-                <li>Syllabus - 10 minutes</li>
-                <li>Course Logistics - 10 minutes</li>
-                {/* Add more reading details */}
+                {module.readings.map((reading, index) => (
+                  <li key={index}>{reading}</li>
+                ))}
               </ul>
             </div>
             <div>
-              <h3 className="text-lg font-medium">1 quiz</h3>
+              <h3 className="text-lg font-medium">Quizzes</h3>
               <ul className="mt-2 space-y-1">
-                <li>Python, Variables, and Functions - 30 minutes</li>
+                {module.quizzes.map((quiz, index) => (
+                  <li key={index}>{quiz}</li>
+                ))}
               </ul>
             </div>
           </div>
+          <button className="bg-blue-500 mt-5 hover:bg-blue-600 text-white py-2 px-4 rounded-md">
+            Learn Module
+          </button>
         </div>
       )}
     </div>

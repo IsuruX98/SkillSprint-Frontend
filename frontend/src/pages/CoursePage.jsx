@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Pagination from "../components/Pagination/Pagination";
 
 const CoursePage = () => {
   const [courses, setCourses] = useState([
@@ -139,24 +140,11 @@ const CoursePage = () => {
             </Link>
           ))}
         </div>
-        <div className="flex justify-center mt-8">
-          {Array.from(
-            { length: Math.ceil(courses.length / pageSize) },
-            (_, i) => (
-              <button
-                key={i}
-                onClick={() => paginate(i + 1)}
-                className={`mx-1 px-3 py-1 rounded ${
-                  currentPage === i + 1
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-700"
-                }`}
-              >
-                {i + 1}
-              </button>
-            )
-          )}
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={Math.ceil(courses.length / pageSize)}
+          onPageChange={paginate}
+        />
       </div>
     </div>
   );
