@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Pagination from "../components/Pagination/Pagination";
 
-const CoursePage = () => {
+const CoursesPage = () => {
   const [courses, setCourses] = useState([
     {
       id: 1,
@@ -114,13 +114,13 @@ const CoursePage = () => {
 
   return (
     <div>
-      <div className="bg-blue-500 text-white">
-        <div className="lg:px-32 lg:py-12 px-12 py-12">
+      <div>
+        <div className="lg:px-32 px-12 py-8">
           <h1 className="text-3xl font-bold">Courses</h1>
           <p className="mt-2">Explore our range of courses</p>
         </div>
       </div>
-      <div className="lg:px-32 lg:py-12 px-12 py-12">
+      <div className="lg:px-32 px-12 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {currentCourses.map((course) => (
             <Link
@@ -150,4 +150,4 @@ const CoursePage = () => {
   );
 };
 
-export default CoursePage;
+export default CoursesPage;

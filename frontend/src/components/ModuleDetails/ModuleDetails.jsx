@@ -1,7 +1,14 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const ModuleDetails = ({ module }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const navigateToLearnModule = () => {
+    // Pass module data through location state
+    navigate("/learn-module", { state: { module: module } });
+  };
 
   const toggleAccordion = () => {
     setIsOpen(!isOpen);
@@ -37,7 +44,11 @@ const ModuleDetails = ({ module }) => {
               <h3 className="text-lg font-medium">Videos</h3>
               <ul className="mt-2 space-y-1">
                 {module.videos.map((video, index) => (
-                  <li key={index}>{video}</li>
+                  <li key={index}>
+                    <a href={video.link} className="hover:underline">
+                      {video.title} ({video.duration})
+                    </a>
+                  </li>
                 ))}
               </ul>
             </div>
@@ -45,7 +56,11 @@ const ModuleDetails = ({ module }) => {
               <h3 className="text-lg font-medium">Readings</h3>
               <ul className="mt-2 space-y-1">
                 {module.readings.map((reading, index) => (
-                  <li key={index}>{reading}</li>
+                  <li key={index}>
+                    <span>
+                      {reading.title} ({reading.duration})
+                    </span>
+                  </li>
                 ))}
               </ul>
             </div>
@@ -53,12 +68,19 @@ const ModuleDetails = ({ module }) => {
               <h3 className="text-lg font-medium">Quizzes</h3>
               <ul className="mt-2 space-y-1">
                 {module.quizzes.map((quiz, index) => (
-                  <li key={index}>{quiz}</li>
+                  <li key={index}>
+                    <span>
+                      {quiz.title} ({quiz.duration})
+                    </span>
+                  </li>
                 ))}
               </ul>
             </div>
           </div>
-          <button className="bg-blue-500 mt-5 hover:bg-blue-600 text-white py-2 px-4 rounded-md">
+          <button
+            onClick={navigateToLearnModule}
+            className="bg-blue-500 mt-5 hover:bg-blue-600 text-white py-2 px-4 rounded-md inline-block"
+          >
             Learn Module
           </button>
         </div>

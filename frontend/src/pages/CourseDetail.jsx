@@ -5,76 +5,134 @@ import ModuleDetails from "../components/ModuleDetails/ModuleDetails";
 
 const CourseDetail = () => {
   const [course] = useState({
-    id: 1,
-    title: "Learn to Program: The Fundamentals",
+    id: 2,
+    title: "Advanced Python Programming",
     description:
-      "Build a strong foundation in programming with this comprehensive course. Learn the fundamental concepts of programming, including variables, data types, control flow, and more.",
-    rating: (Math.random() * (5 - 3.5) + 3.5).toFixed(1),
-    enrolledCount: Math.ceil(Math.random() * (8500 - 5500) + 5500),
-    isEnrolled: Math.random() < 0.5,
-    level: "Beginner",
-    duration: "Approximately 12 weeks",
+      "Take your Python skills to the next level with this advanced course. Explore advanced topics such as object-oriented programming, data structures, and algorithms.",
+    rating: 4.7,
+    enrolledCount: 4500,
+    isEnrolled: false,
+    level: "Intermediate",
+    duration: "Approximately 8 weeks",
     skillsGained: [
-      "Problem-solving",
-      "Programming logic",
-      "Algorithmic thinking",
+      "Object-oriented programming",
+      "Data structures",
+      "Algorithm design",
     ],
     modules: [
       {
         id: 1,
-        title: "Module 1: Introduction to Programming",
+        title: "Module 1: Object-oriented Programming",
         videos: [
-          "Welcome to LTP - 0 minutes - Preview module",
-          "Installing Python - 2 minutes",
-          // Add more video details as needed
+          {
+            title: "Introduction to OOP",
+            duration: "10 minutes",
+            description:
+              "Understand the principles of object-oriented programming. This video covers the basics of classes, objects, and inheritance.",
+            link: "https://res.cloudinary.com/dpgelkpd4/video/upload/v1697576226/upload/juvlunodv5dldz3ipjas.mp4",
+          },
+          {
+            title: "Classes and Objects",
+            duration: "15 minutes",
+            description:
+              "Learn how to define classes and create objects in Python. This video explains the concepts of classes, attributes, and methods.",
+            link: "https://res.cloudinary.com/dpgelkpd4/video/upload/v1697576226/upload/juvlunodv5dldz3ipjas.mp4",
+          },
         ],
         readings: [
-          "Syllabus - 10 minutes",
-          "Course Logistics - 10 minutes",
-          // Add more reading details as needed
+          {
+            title: "Inheritance and Polymorphism",
+            duration: "20 minutes",
+            description:
+              "Explore inheritance and polymorphism in object-oriented programming. This reading material delves into the concepts of inheritance, method overriding, and polymorphic behavior.",
+          },
+          {
+            title: "Encapsulation and Abstraction",
+            duration: "15 minutes",
+            description:
+              "Understand encapsulation and abstraction concepts. This reading material explains how encapsulation and abstraction help in designing robust and maintainable software systems.",
+          },
         ],
         quizzes: [
-          "Python, Variables, and Functions - 30 minutes",
-          // Add more quiz details as needed
+          {
+            title: "OOP Quiz",
+            duration: "25 minutes",
+            description:
+              "Test your understanding of object-oriented programming concepts. This quiz covers topics such as inheritance, encapsulation, polymorphism, and class design principles.",
+            quiz: {
+              questions: [
+                {
+                  question:
+                    "What is inheritance in object-oriented programming?",
+                  options: ["A", "B", "C", "D"],
+                  correct_answer: "A",
+                },
+                {
+                  question: "What is encapsulation?",
+                  options: ["A", "B", "C", "D"],
+                  correct_answer: "B",
+                },
+              ],
+            },
+          },
         ],
       },
       {
         id: 2,
-        title: "Module 2: Variables and Data Types",
+        title: "Module 2: Data Structures",
         videos: [
-          "Introduction to Variables - 5 minutes",
-          "Data Types in Python - 10 minutes",
-          // Add more video details as needed
+          {
+            title: "Introduction to Data Structures",
+            duration: "12 minutes",
+            description:
+              "Learn about common data structures in Python. This video provides an overview of data structures such as arrays, linked lists, stacks, queues, trees, and graphs.",
+            link: "https://res.cloudinary.com/dpgelkpd4/video/upload/v1697576226/upload/juvlunodv5dldz3ipjas.mp4",
+          },
+          {
+            title: "Arrays and Linked Lists",
+            duration: "20 minutes",
+            description:
+              "Explore arrays and linked lists. This video discusses the implementation, advantages, and use cases of arrays and linked lists in Python.",
+            link: "https://res.cloudinary.com/dpgelkpd4/video/upload/v1697576226/upload/juvlunodv5dldz3ipjas.mp4",
+          },
         ],
         readings: [
-          "Variables and Memory Allocation - 15 minutes",
-          "Primitive and Non-Primitive Data Types - 20 minutes",
-          // Add more reading details as needed
+          {
+            title: "Stacks and Queues",
+            duration: "15 minutes",
+            description:
+              "Stacks and queues are fundamental data structures used in computer science and software engineering. In this reading material, you will delve deep into understanding the principles, operations, and applications of stacks and queues. You will learn how stacks follow the Last In, First Out (LIFO) principle, making them suitable for tasks like expression evaluation, backtracking, and memory management. Similarly, queues adhere to the First In, First Out (FIFO) principle, making them ideal for implementing algorithms such as breadth-first search and job scheduling. By the end of this reading, you will have a solid grasp of how stacks and queues work and how they are applied in various real-world scenarios.",
+          },
+          {
+            title: "Trees and Graphs",
+            duration: "25 minutes",
+            description:
+              "Trees and graphs are essential data structures used to represent hierarchical relationships and complex networks, respectively. This reading material provides an in-depth exploration of trees and graphs, starting with the hierarchical structure of trees. You will learn about different types of trees, such as binary trees, binary search trees, and balanced trees, and understand their properties and operations. Additionally, the reading covers graph theory, which deals with the interconnected nature of graphs. You will explore different types of graphs, including directed and undirected graphs, and learn about important concepts like paths, cycles, and connectivity. By the end of this reading, you will have a comprehensive understanding of trees and graphs, enabling you to solve problems involving hierarchical data and complex networks with confidence.",
+          },
         ],
         quizzes: [
-          "Variables Quiz - 20 minutes",
-          // Add more quiz details as needed
+          {
+            title: "Data Structures Quiz",
+            duration: "30 minutes",
+            description:
+              "Test your understanding of data structures in Python. This quiz evaluates your knowledge of arrays, linked lists, stacks, queues, trees, and graphs.",
+            quiz: {
+              questions: [
+                {
+                  question: "What is a stack?",
+                  options: ["A", "B", "C", "D"],
+                  correct_answer: "A",
+                },
+                {
+                  question: "What is a graph?",
+                  options: ["A", "B", "C", "D"],
+                  correct_answer: "B",
+                },
+              ],
+            },
+          },
         ],
       },
-      {
-        id: 3,
-        title: "Module 3: Control Flow",
-        videos: [
-          "Conditional Statements - 8 minutes",
-          "Loops in Python - 12 minutes",
-          // Add more video details as needed
-        ],
-        readings: [
-          "If-else Statements - 10 minutes",
-          "For and While Loops - 15 minutes",
-          // Add more reading details as needed
-        ],
-        quizzes: [
-          "Control Flow Quiz - 25 minutes",
-          // Add more quiz details as needed
-        ],
-      },
-      // Add more modules as needed
     ],
   });
 
