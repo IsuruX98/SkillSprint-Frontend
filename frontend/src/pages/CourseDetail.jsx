@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaUserAlt } from "react-icons/fa";
 import { BsFillStarFill } from "react-icons/bs";
 import ModuleDetails from "../components/ModuleDetails/ModuleDetails";
+import Payment from "../components/Payment/Payment";
 
 const CourseDetail = () => {
   const [course] = useState({
@@ -11,8 +12,8 @@ const CourseDetail = () => {
       "Take your Python skills to the next level with this advanced course. Explore advanced topics such as object-oriented programming, data structures, and algorithms.",
     rating: 4.7,
     enrolledCount: 4500,
-    isEnrolled: false,
     level: "Intermediate",
+    price: 3500.0,
     duration: "Approximately 8 weeks",
     skillsGained: [
       "Object-oriented programming",
@@ -136,6 +137,13 @@ const CourseDetail = () => {
     ],
   });
 
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
+
+  const handleEnroll = () => {
+    setShowPayment(true);
+  };
+
   return (
     <div className="py-8 bg-gray-100">
       <div className="lg:px-32 lg:py-12 px-12 py-12">
@@ -172,14 +180,18 @@ const CourseDetail = () => {
             <div className="mb-4">
               <button
                 className={`w-full py-2 rounded-md text-white ${
-                  course.isEnrolled
+                  isEnrolled
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-blue-500 hover:bg-blue-600"
                 }`}
+                onClick={handleEnroll}
               >
                 {course.isEnrolled ? "Already Enrolled" : "Enroll Now"}
               </button>
             </div>
+            {showPayment && (
+              <Payment data={course} onClose={() => setShowPayment(false)} />
+            )}
 
             <div className="text-gray-600 mb-4">
               <strong>{course.enrolledCount}</strong> Already Enrolled
