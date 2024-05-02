@@ -180,7 +180,7 @@ const LearnModulePage = () => {
       {/* Quiz Modal */}
       {quizModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-[1000]">
-          <div className="bg-white p-4 rounded-lg">
+          <div className="bg-white p-4 rounded-lg mx-10">
             <h2 className="text-xl font-semibold mb-4">OOP Quiz</h2>
             <p className="text-gray-600">{module.quizzes[0].description}</p>
             <p className="text-sm text-gray-500">
@@ -189,7 +189,7 @@ const LearnModulePage = () => {
             <div className="mt-4">
               {/* Show one question at a time based on currentQuestion index */}
               <div className="mb-2">
-                <p className="font-semibold">
+                <p className="font-semibold mb-5">
                   {module.quizzes[0].quiz.questions[currentQuestion].question}
                 </p>
                 <div className="ml-4">
