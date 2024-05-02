@@ -69,17 +69,22 @@ const CheckoutForm = ({ data }) => {
     }
 
     try {
-      // Create the PaymentIntent and obtain clientSecret from your server endpoint
-      const { data } = await axios.post("/create-intent");
+      // Simulate creating a PaymentIntent and obtain clientSecret from your server endpoint
+      const { data } = await axios.post("/create-intent", {
+        amount: data.price,
+        currency: "usd",
+        payment_method_types: ["card"], // Use "card" for testing with test cards
+      });
 
       const { client_secret: clientSecret } = data;
 
-      const { error } = await stripe.confirmPayment({
-        //`Elements` instance that was used to create the Payment Element
-        elements,
-        clientSecret,
-        confirmParams: {
-          return_url: "https://example.com/order/123/complete",
+      // Simulate confirming the PaymentIntent with Stripe
+      const { error } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(PaymentElement),
+          billing_details: {
+            // Include any billing details if required
+          },
         },
       });
 
@@ -90,9 +95,10 @@ const CheckoutForm = ({ data }) => {
         // details incomplete)
         setErrorMessage(error.message);
       } else {
-        // Your customer will be redirected to your `return_url`. For some payment
-        // methods like iDEAL, your customer will be redirected to an intermediate
-        // site first to authorize the payment, then redirected to the `return_url`.
+        // Payment successful
+        setLoading(false);
+        setErrorMessage(null); // Clear any previous error messages
+        // You can handle successful payment here, such as redirecting the user or showing a success message
       }
     } catch (error) {
       setLoading(false);
