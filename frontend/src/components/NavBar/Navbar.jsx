@@ -1,12 +1,70 @@
 import React, { useState } from "react";
-import { AiOutlineClose, AiOutlineMenu, AiOutlineUser } from "react-icons/ai";
+import {
+  AiOutlineClose,
+  AiOutlineMenu,
+  AiOutlineUser,
+  AiOutlineBell,
+} from "react-icons/ai";
 import AuthModal from "../AuthModel/AuthModel";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 import UserProfileModal from "../UserProfileModal/UserProfileModal";
+import NotificationModal from "../NotificationModal/NotificationModal";
+
+const dummyNotifications = [
+  {
+    id: 1,
+    message:
+      "New message from John Doe: Hi there! I have a question about the course material. Can we discuss it sometime today?",
+  },
+  {
+    id: 2,
+    message:
+      "Reminder: Your weekly quiz for 'Introduction to Data Science' is due tomorrow. Don't forget to complete it!",
+  },
+  {
+    id: 3,
+    message:
+      "You have successfully completed the 'Python Programming for Beginners' course! Congratulations on your achievement!",
+  },
+  {
+    id: 4,
+    message:
+      "Special Offer: Enroll now in our new course 'Machine Learning Fundamentals' and get 20% off!",
+  },
+  {
+    id: 5,
+    message:
+      "Feedback Request: Please take a moment to share your thoughts on the course 'Web Development Essentials'. Your feedback helps us improve!",
+  },
+  {
+    id: 6,
+    message:
+      "New Announcement: Join us for a live webinar on 'Advanced Algorithms' this Friday at 3:00 PM. Reserve your spot now!",
+  },
+  {
+    id: 7,
+    message:
+      "Important Update: The deadline for project submissions in 'Data Analysis with Python' has been extended to next Monday. Take advantage of the extra time!",
+  },
+  {
+    id: 8,
+    message:
+      "Upcoming Event: Don't miss the virtual career fair for IT professionals happening next week. Explore job opportunities with top companies!",
+  },
+  {
+    id: 9,
+    message:
+      "Course Recommendation: Based on your interests, we suggest enrolling in the course 'Artificial Intelligence: Principles and Techniques'. Check it out now!",
+  },
+  {
+    id: 10,
+    message:
+      "New Certificate Earned: Congratulations! You've earned a certificate in 'Machine Learning Foundations'. Share your achievement on LinkedIn!",
+  },
+];
 
 const Navbar = () => {
-  //const { user, logout } = useAuth();
   const user = null;
   const logout = () => {};
   const [nav, setNav] = useState(false);
@@ -15,6 +73,8 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [notifications, setNotifications] = useState(dummyNotifications);
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
 
   const handleNav = () => {
     setNav(!nav);
@@ -38,6 +98,7 @@ const Navbar = () => {
     setShowLogin(false);
     setShowRegister(false);
     setShowProfileModal(false);
+    setShowNotificationModal(false);
   };
 
   return (
@@ -109,7 +170,7 @@ const Navbar = () => {
                   className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 hover:text-gray-900"
                   role="menuitem"
                 >
-                  Sub Page 2
+                  About us
                 </Link>
                 <Link
                   to="/"
@@ -117,7 +178,7 @@ const Navbar = () => {
                   className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 hover:text-gray-900"
                   role="menuitem"
                 >
-                  Sub Page 3
+                  Contact us
                 </Link>
               </div>
             </div>
@@ -127,23 +188,29 @@ const Navbar = () => {
 
       {/* Auth Links or User Profile Button */}
       <div className="items-center hidden gap-8 lg:flex text-white">
-        {user ? (
-          <button
-            onClick={() => setShowProfileModal(true)}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-semibold text-blue-500 shadow-sm border transition-all duration-150 hover:bg-[#d1d5db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-          >
-            <AiOutlineUser />
-            {user.name}
-          </button>
-        ) : (
+        {!user ? (
           <>
             <button
               onClick={() => setShowProfileModal(true)}
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-semibold text-blue-500 shadow-sm border transition-all duration-150 hover:bg-[#d1d5db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             >
               <AiOutlineUser />
-              profile
+              John Doe
             </button>
+            <button
+              className="relative flex items-center justify-center text-black"
+              onClick={() => setShowNotificationModal(true)}
+            >
+              <AiOutlineBell size={24} />
+              {notifications.length > 0 && (
+                <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-2 py-1 text-xs">
+                  {notifications.length}
+                </span>
+              )}
+            </button>
+          </>
+        ) : (
+          <>
             <button
               onClick={handleLoginModal}
               className="flex items-center justify-center text-black"
@@ -176,6 +243,14 @@ const Navbar = () => {
           user={user}
           onClose={handleCloseModal}
           logout={logout}
+        />
+      )}
+
+      {/* Notification Modal */}
+      {showNotificationModal && (
+        <NotificationModal
+          notifications={notifications}
+          onClose={() => setShowNotificationModal(false)}
         />
       )}
 
@@ -229,7 +304,7 @@ const Navbar = () => {
                 setNav(false);
               }}
             >
-              <div className="cursor-pointer">sub page 02</div>
+              <div className="cursor-pointer">About us</div>
             </Link>
           </li>
           <li className="p-4 hover:bg-gray-100 hover:text-blue-500">
@@ -239,7 +314,7 @@ const Navbar = () => {
                 setNav(false);
               }}
             >
-              <div className="cursor-pointer">sub page 03</div>
+              <div className="cursor-pointer">Contact us</div>
             </Link>
           </li>
           {/* Add any additional links here */}

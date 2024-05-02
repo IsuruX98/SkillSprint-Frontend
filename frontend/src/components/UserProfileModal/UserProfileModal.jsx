@@ -6,6 +6,7 @@ import {
   ErrorNotification,
 } from "../../notifications/notifications";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import Pagination from "../Pagination/Pagination";
 
 const UserProfileModal = ({ onClose, logout }) => {
   const [editable, setEditable] = useState(false);
@@ -208,28 +209,11 @@ const UserProfileModal = ({ onClose, logout }) => {
             </div>
 
             {/* Pagination */}
-            <div className="flex justify-center">
-              {enrolledCourses.length > coursesPerPage && (
-                <ul className="flex">
-                  {Array.from({
-                    length: Math.ceil(enrolledCourses.length / coursesPerPage),
-                  }).map((_, index) => (
-                    <li key={index} className="mx-1">
-                      <button
-                        onClick={() => paginate(index + 1)}
-                        className={`${
-                          currentPage === index + 1
-                            ? "bg-blue-500 text-white"
-                            : "bg-gray-200 text-gray-700"
-                        } px-3 py-1 rounded-lg`}
-                      >
-                        {index + 1}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(enrolledCourses.length / coursesPerPage)}
+              onPageChange={paginate}
+            />
 
             {/* Buttons for update and logout */}
             <div className="flex justify-between mt-5">
