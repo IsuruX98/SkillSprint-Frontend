@@ -123,7 +123,7 @@ const Navbar = () => {
     <nav className="flex justify-between w-full py-4 lg:px-32 px-4 sticky top-0 z-[999] bg-white">
       {/* Logo */}
       <div className="cursor-pointer lg:hidden">
-        <h1 className="text-2xl font-bold text-black font-extrabold">
+        <h1 className="text-2xl  text-black font-extrabold">
           {isAdmin ? "SkillSprint Admin" : "SkillSprint"}
         </h1>
       </div>
@@ -153,39 +153,39 @@ const Navbar = () => {
             </div>
           )}
         </div>
-        <div className="relative inline-block text-left">
-          <button
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-            type="button"
-            className="inline-flex justify-center w-full rounded-xl px-4 py-2 text-sm border font-medium focus:border-blue-500 lg:w-auto"
-            aria-expanded="true"
-            aria-haspopup="true"
-          >
-            {isAdmin ? "Features" : "Explore more"}
-            <svg
-              className="-mr-1 ml-2 h-5 w-5"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
+        {!isAdmin && (
+          <div className="relative inline-block text-left">
+            <button
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              type="button"
+              className="inline-flex justify-center w-full rounded-xl px-4 py-2 text-sm border font-medium focus:border-blue-500 lg:w-auto"
+              aria-expanded="true"
+              aria-haspopup="true"
             >
-              <path
-                fillRule="evenodd"
-                d="M6.293 7.293a1 1 0 011.414 0L10 9.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
-          {dropdownOpen && (
-            <div
-              className="origin-top-left absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
-              role="menu"
-              aria-orientation="vertical"
-            >
-              <div className="py-1" role="none">
-                {/* Render admin-specific dropdown items if isAdmin is true */}
-                {(isAdmin ? adminDropdownItems : defaultDropdownItems).map(
-                  (item) => (
+              {isAdmin ? "Features" : "Explore more"}
+              <svg
+                className="-mr-1 ml-2 h-5 w-5"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M6.293 7.293a1 1 0 011.414 0L10 9.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+            {dropdownOpen && (
+              <div
+                className="origin-top-left absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                role="menu"
+                aria-orientation="vertical"
+              >
+                <div className="py-1" role="none">
+                  {/* Render admin-specific dropdown items if isAdmin is true */}
+                  {defaultDropdownItems.map((item) => (
                     <Link
                       key={item.path}
                       to={item.path}
@@ -195,12 +195,12 @@ const Navbar = () => {
                     >
                       {item.label}
                     </Link>
-                  )
-                )}
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Auth Links or User Profile Button */}

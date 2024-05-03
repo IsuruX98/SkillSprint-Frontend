@@ -60,7 +60,7 @@ const AdminHome = () => {
           {renderTabs()}
         </div>
       </div>
-      <div className="p-4">{renderContent()}</div>
+      <div className="py-5">{renderContent()}</div>
     </div>
   );
 };
