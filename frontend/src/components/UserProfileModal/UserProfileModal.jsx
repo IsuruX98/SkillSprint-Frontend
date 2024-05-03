@@ -7,6 +7,7 @@ import {
 } from "../../notifications/notifications";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import Pagination from "../Pagination/Pagination";
+import { useLocation } from "react-router-dom";
 
 const UserProfileModal = ({ onClose, logout }) => {
   const [editable, setEditable] = useState(false);
@@ -20,6 +21,8 @@ const UserProfileModal = ({ onClose, logout }) => {
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [mobileError, setMobileError] = useState("");
+  const location = useLocation();
+  const isAdmin = location.pathname === "/admin"; // Check if the current path is '/admin'
 
   useEffect(() => {
     // Fetch enrolled courses when the component mounts
@@ -133,7 +136,9 @@ const UserProfileModal = ({ onClose, logout }) => {
       <div className="bg-white p-8 rounded-lg w-96">
         <div>
           <div className="flex justify-between">
-            <h2 className="text-2xl font-bold mb-4 text-black">User Profile</h2>
+            <h2 className="text-2xl font-bold mb-4 text-black">
+              {isAdmin ? "Admin Profile" : "User Profile"}
+            </h2>
             <button onClick={onClose}>
               <AiOutlineClose className="text-black" />
             </button>
@@ -190,30 +195,38 @@ const UserProfileModal = ({ onClose, logout }) => {
             </div>
 
             {/* Enrolled courses section */}
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold mb-2">Enrolled Courses</h3>
-              {currentCourses.map((course) => (
-                <div
-                  key={course.id}
-                  className="flex items-center justify-between mb-2"
-                >
-                  <span>{course.name}</span>
-                  <button
-                    className="text-blue-500 underline cursor-pointer"
-                    onClick={() => console.log(`View ${course.name}`)}
-                  >
-                    View
-                  </button>
+            {!isAdmin ? (
+              <>
+                {" "}
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">
+                    Enrolled Courses
+                  </h3>
+                  {currentCourses.map((course) => (
+                    <div
+                      key={course.id}
+                      className="flex items-center justify-between mb-2"
+                    >
+                      <span>{course.name}</span>
+                      <button
+                        className="text-blue-500 underline cursor-pointer"
+                        onClick={() => console.log(`View ${course.name}`)}
+                      >
+                        View
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-
-            {/* Pagination */}
-            <Pagination
-              currentPage={currentPage}
-              totalPages={Math.ceil(enrolledCourses.length / coursesPerPage)}
-              onPageChange={paginate}
-            />
+                {/* Pagination */}
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={Math.ceil(
+                    enrolledCourses.length / coursesPerPage
+                  )}
+                  onPageChange={paginate}
+                />
+              </>
+            ) : null}
 
             {/* Buttons for update and logout */}
             <div className="flex justify-between mt-5">

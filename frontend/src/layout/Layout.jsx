@@ -12,10 +12,13 @@ const Layout = () => {
 
   return (
     <div>
-      {/* Render Navbar and Footer only if it's not an admin route */}
+      {/* Render Navbar and Footer only if it's not an admin route
       {!isAdminRoute && <Navbar />}
       <Router />
-      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && <Footer />} */}
+      <Navbar />
+      <Router />
+      <Footer />
     </div>
   );
 };

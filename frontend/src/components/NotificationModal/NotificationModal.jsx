@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Pagination from "../Pagination/Pagination";
+import { useLocation } from "react-router-dom";
 
 const NotificationModal = ({ notifications, onClose }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const notificationsPerPage = 5;
+  const location = useLocation();
+  const isAdmin = location.pathname === "/admin"; // Check if the current path is '/admin'
 
   const indexOfLastNotification = currentPage * notificationsPerPage;
   const indexOfFirstNotification =
@@ -25,7 +28,9 @@ const NotificationModal = ({ notifications, onClose }) => {
     <div className="fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white rounded-lg shadow-lg p-6 overflow-y-auto max-h-[80vh] mx-10">
         <div className="flex justify-between">
-          <h2 className="text-lg font-semibold mb-4">Notifications</h2>
+          <h2 className="text-lg font-semibold mb-4">
+            {isAdmin ? "Admin Notifications" : "Notifications"}
+          </h2>
           <button onClick={onClose}>
             <AiOutlineClose className="text-black" />
           </button>

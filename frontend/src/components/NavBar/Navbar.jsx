@@ -6,7 +6,7 @@ import {
   AiOutlineBell,
 } from "react-icons/ai";
 import AuthModal from "../AuthModel/AuthModel";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 import UserProfileModal from "../UserProfileModal/UserProfileModal";
 import NotificationModal from "../NotificationModal/NotificationModal";
@@ -67,6 +67,8 @@ const dummyNotifications = [
 const Navbar = () => {
   const user = null;
   const logout = () => {};
+  const location = useLocation();
+  const isAdmin = location.pathname === "/admin"; // Check if the current path is '/admin'
   const [nav, setNav] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
@@ -75,6 +77,22 @@ const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notifications, setNotifications] = useState(dummyNotifications);
   const [showNotificationModal, setShowNotificationModal] = useState(false);
+
+  // Define the admin-specific dropdown menu items
+  const adminDropdownItems = [
+    { path: "/user-management", label: "User Management" },
+    { path: "/course-management", label: "Course Management" },
+    { path: "/notification-management", label: "Notification Management" },
+    { path: "/payment-management", label: "Payment Management" },
+    { path: "/enrollment-management", label: "Enrollment Management" },
+  ];
+
+  const defaultDropdownItems = [
+    { path: "/courses", label: "Explore courses" },
+    { path: "/", label: "About us" },
+    { path: "/", label: "Contact us" },
+    // Add any additional default dropdown items here
+  ];
 
   const handleNav = () => {
     setNav(!nav);
@@ -102,10 +120,12 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex justify-between w-full py-4 lg:px-32 px-12 sticky top-0 z-[999] bg-white">
+    <nav className="flex justify-between w-full py-4 lg:px-32 px-4 sticky top-0 z-[999] bg-white">
       {/* Logo */}
       <div className="cursor-pointer lg:hidden">
-        <h1 className="text-2xl font-bold text-black">SkillSprint</h1>
+        <h1 className="text-2xl font-bold text-black font-extrabold">
+          {isAdmin ? "SkillSprint Admin" : "SkillSprint"}
+        </h1>
       </div>
 
       {/* Main Navigation Links */}
@@ -113,18 +133,25 @@ const Navbar = () => {
         <div className="flex items-center">
           <h3 className="font-extrabold text-black">
             <Link to="/" spy={true} smooth={true} duration={500}>
-              <div className="cursor-pointer text-2xl">SkillSprint</div>
+              <div className="cursor-pointer text-2xl">
+                {isAdmin ? "SkillSprint Admin" : "SkillSprint"}
+              </div>
             </Link>
           </h3>
         </div>
         <div className="flex-grow mx-4">
-          <input
-            type="text"
-            placeholder="What do you want to learn..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="px-4 py-1 border rounded-xl focus:outline-none focus:border-blue-500 w-64"
-          />
+          {/* Search input */}
+          {!isAdmin && (
+            <div className="flex-grow mx-4">
+              <input
+                type="text"
+                placeholder="What do you want to learn..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="px-4 py-1 border rounded-xl focus:outline-none focus:border-blue-500 w-64"
+              />
+            </div>
+          )}
         </div>
         <div className="relative inline-block text-left">
           <button
@@ -134,7 +161,7 @@ const Navbar = () => {
             aria-expanded="true"
             aria-haspopup="true"
           >
-            Explore more
+            {isAdmin ? "Features" : "Explore more"}
             <svg
               className="-mr-1 ml-2 h-5 w-5"
               xmlns="http://www.w3.org/2000/svg"
@@ -156,30 +183,20 @@ const Navbar = () => {
               aria-orientation="vertical"
             >
               <div className="py-1" role="none">
-                <Link
-                  to="/courses"
-                  onClick={() => setDropdownOpen(false)}
-                  className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 hover:text-gray-900"
-                  role="menuitem"
-                >
-                  Explore courses
-                </Link>
-                <Link
-                  to="/"
-                  onClick={() => setDropdownOpen(false)}
-                  className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 hover:text-gray-900"
-                  role="menuitem"
-                >
-                  About us
-                </Link>
-                <Link
-                  to="/"
-                  onClick={() => setDropdownOpen(false)}
-                  className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 hover:text-gray-900"
-                  role="menuitem"
-                >
-                  Contact us
-                </Link>
+                {/* Render admin-specific dropdown items if isAdmin is true */}
+                {(isAdmin ? adminDropdownItems : defaultDropdownItems).map(
+                  (item) => (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      onClick={() => setDropdownOpen(false)}
+                      className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 hover:text-gray-900"
+                      role="menuitem"
+                    >
+                      {item.label}
+                    </Link>
+                  )
+                )}
               </div>
             </div>
           )}
@@ -282,52 +299,38 @@ const Navbar = () => {
             smooth={true}
             duration={500}
           >
-            <h1 className="text-2xl font-bold">SkillSprint</h1>
+            <h1 className="text-2xl font-bold">
+              {isAdmin ? "SkillSprint Admin" : "SkillSprint"}
+            </h1>
           </Link>
         </h1>
         <ul className="p-4 mt-20">
           {/* Render the same navigation links as in large screen */}
-          <li className="p-4 hover:bg-gray-100 hover:text-blue-500">
-            <Link
-              to="/courses"
-              onClick={() => {
-                setNav(false);
-              }}
+          {(isAdmin ? adminDropdownItems : defaultDropdownItems).map((item) => (
+            <li
+              key={item.path}
+              className="p-4 hover:bg-gray-100 hover:text-blue-500"
             >
-              <div className="cursor-pointer">Explore courses</div>
-            </Link>
-          </li>
-          <li className="p-4 hover:bg-gray-100 hover:text-blue-500">
-            <Link
-              to="/"
-              onClick={() => {
-                setNav(false);
-              }}
-            >
-              <div className="cursor-pointer">About us</div>
-            </Link>
-          </li>
-          <li className="p-4 hover:bg-gray-100 hover:text-blue-500">
-            <Link
-              to="/"
-              onClick={() => {
-                setNav(false);
-              }}
-            >
-              <div className="cursor-pointer">Contact us</div>
-            </Link>
-          </li>
-          {/* Add any additional links here */}
+              <Link
+                to={item.path}
+                onClick={() => {
+                  setNav(false);
+                }}
+              >
+                <div className="cursor-pointer">{item.label}</div>
+              </Link>
+            </li>
+          ))}
         </ul>
         {/* Sign In and Sign Up buttons */}
         <div className="flex flex-col mx-5">
-          {user ? (
+          {!user ? (
             <button
               onClick={() => setShowProfileModal(true)}
               className="inline-flex mt-8 items-center justify-center gap-2 rounded-md bg-white px-4 py-2 text-sm font-semibold text-blue-500 border shadow-sm transition-all duration-150 hover:bg-[#d1d5db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             >
               <AiOutlineUser />
-              {user.name}
+              john doe
             </button>
           ) : (
             <>
