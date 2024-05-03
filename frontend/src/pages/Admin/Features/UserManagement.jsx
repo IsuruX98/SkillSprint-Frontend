@@ -151,7 +151,7 @@ const UserManagement = () => {
                 <td className="p-3">{user.email}</td>
                 <td className="p-3">{user.mobile}</td>
                 <td className="p-3">{user.role}</td>
-                <td className="p-3 flex justify-end">
+                <td className="p-3 flex justify-center">
                   <button
                     onClick={() => deleteUser(user.id)}
                     className="bg-red-500 text-white px-4 py-1 rounded mr-2"
