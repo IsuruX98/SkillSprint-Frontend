@@ -120,7 +120,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex justify-between w-full py-4 lg:px-32 px-4 sticky top-0 z-[999] bg-white">
+    <nav className="flex justify-between w-full shadow-sm py-4 lg:px-32 px-4 sticky top-0 z-[999] bg-white">
       {/* Logo */}
       <div className="cursor-pointer lg:hidden">
         <h1 className="text-2xl  text-black font-extrabold">
