@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ViewCourses from "./CourseTabs/ViewCourses";
 import AddCourse from "./CourseTabs/AddCourse";
+import AddModule from "./CourseTabs/AddModule";
 
 const CourseManagement = () => {
   const [activeTab, setActiveTab] = useState("View Courses");
@@ -9,7 +10,11 @@ const CourseManagement = () => {
     setActiveTab(label);
   };
 
-  const tabs = [{ label: "View Courses" }, { label: "Add Course" }];
+  const tabs = [
+    { label: "View Courses" },
+    { label: "Add Course" },
+    { label: "Add Module" },
+  ];
 
   const renderTabs = () => {
     return tabs.map((tab) => (
@@ -33,6 +38,8 @@ const CourseManagement = () => {
         return <ViewCourses />;
       case "Add Course":
         return <AddCourse />;
+      case "Add Module":
+        return <AddModule />;
       default:
         return null;
     }
@@ -41,7 +48,7 @@ const CourseManagement = () => {
   return (
     <div className="">
       <div className="flex flex-wrap justify-center">
-        <div className="grid md:grid-cols-2 gap-2 w-full">{renderTabs()}</div>
+        <div className="grid md:grid-cols-3 gap-2 w-full">{renderTabs()}</div>
       </div>
       <div className="py-5">{renderContent()}</div>
     </div>

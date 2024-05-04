@@ -10,15 +10,6 @@ const AddCourse = () => {
     price: 0,
     duration: "",
     skillsGained: [],
-    modules: [],
-  });
-
-  const [newModule, setNewModule] = useState({
-    id: 0,
-    title: "",
-    videos: [],
-    readings: [],
-    quizzes: [],
   });
 
   const handleChange = (e) => {
@@ -36,31 +27,6 @@ const AddCourse = () => {
     }));
   };
 
-  const handleModuleChange = (e) => {
-    const { name, value } = e.target;
-    setNewModule((prevModule) => ({
-      ...prevModule,
-      [name]: value,
-    }));
-  };
-
-  const addModule = () => {
-    setCourseDetails((prevDetails) => ({
-      ...prevDetails,
-      modules: [
-        ...prevDetails.modules,
-        { ...newModule, id: prevDetails.modules.length + 1 },
-      ],
-    }));
-    setNewModule({
-      id: 0,
-      title: "",
-      videos: [],
-      readings: [],
-      quizzes: [],
-    });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission (e.g., send data to server)
@@ -75,7 +41,6 @@ const AddCourse = () => {
       price: 0,
       duration: "",
       skillsGained: [],
-      modules: [],
     });
   };
 
@@ -177,39 +142,6 @@ const AddCourse = () => {
               onChange={handleChange}
               className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500"
             />
-          </div>
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="modules" className="font-semibold">
-            Modules
-          </label>
-          <div className="space-y-2">
-            {courseDetails.modules.map((module) => (
-              <div key={module.id} className="bg-gray-100 p-4 rounded">
-                <h3 className="text-lg font-semibold">{module.title}</h3>
-                {/* Add input fields for module details */}
-              </div>
-            ))}
-          </div>
-          <div className="mt-2">
-            <h3 className="text-lg font-semibold mb-2">Add New Module</h3>
-            <div className="flex space-x-2">
-              <input
-                type="text"
-                placeholder="Module Title"
-                name="title"
-                value={newModule.title}
-                onChange={handleModuleChange}
-                className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500"
-              />
-              <button
-                type="button"
-                onClick={addModule}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-              >
-                Add
-              </button>
-            </div>
           </div>
         </div>
         <button
