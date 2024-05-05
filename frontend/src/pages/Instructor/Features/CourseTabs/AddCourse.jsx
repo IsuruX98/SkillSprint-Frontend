@@ -1,4 +1,9 @@
 import React, { useState } from "react";
+import axios from "../../../../api/axios";
+import {
+  SuccessNotification,
+  ErrorNotification,
+} from "../../../../notifications/notifications";
 
 const AddCourse = () => {
   const [courseDetails, setCourseDetails] = useState({
@@ -11,6 +16,8 @@ const AddCourse = () => {
     instructorId: "77654467898654579", // Static instructor ID
   });
 
+  const [skillInput, setSkillInput] = useState(""); // State for temporary skill input
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCourseDetails((prevDetails) => ({
@@ -19,20 +26,61 @@ const AddCourse = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSkillInputChange = (e) => {
+    setSkillInput(e.target.value);
+  };
+
+  const handleAddSkill = () => {
+    if (skillInput.trim() !== "") {
+      setCourseDetails((prevDetails) => ({
+        ...prevDetails,
+        skillgained: [...prevDetails.skillgained, skillInput.trim()],
+      }));
+      setSkillInput("");
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission (e.g., send data to server)
-    console.log("Submitted:", courseDetails);
-    // Reset form fields
-    setCourseDetails({
-      courseName: "",
-      categoryId: "",
-      description: "",
-      price: 0,
-      level: "",
-      skillgained: [],
-      instructorId: "77654467898654579",
-    });
+
+    // Validation checks
+    if (
+      !courseDetails.courseName ||
+      !courseDetails.description ||
+      !courseDetails.price ||
+      !courseDetails.level ||
+      courseDetails.skillgained.length === 0
+    ) {
+      ErrorNotification("Please fill in all fields.");
+      return;
+    }
+
+    try {
+      // Send form data to the API
+      await axios.post("course-controller", courseDetails);
+      SuccessNotification("Course added successfully!");
+      console.log("Course added successfully!");
+      // Reset form fields
+      setCourseDetails({
+        courseName: "",
+        categoryId: "",
+        description: "",
+        price: 0,
+        level: "",
+        skillgained: [],
+        instructorId: "77654467898654579",
+      });
+    } catch (error) {
+      console.error("Error adding course:", error);
+      ErrorNotification("Error adding course. Please try again later.");
+    }
+  };
+
+  const handleRemoveSkill = (index) => {
+    setCourseDetails((prevDetails) => ({
+      ...prevDetails,
+      skillgained: prevDetails.skillgained.filter((_, i) => i !== index),
+    }));
   };
 
   return (
@@ -99,17 +147,54 @@ const AddCourse = () => {
             <label htmlFor="skillsGained" className="font-semibold">
               Skills Gained
             </label>
+            <div className="flex items-center">
+              <input
+                type="text"
+                id="skillsGained"
+                name="skillsGained"
+                value={skillInput}
+                onChange={handleSkillInputChange}
+                className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500 flex-grow mr-2"
+              />
+              <button
+                type="button"
+                onClick={handleAddSkill}
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              >
+                Add
+              </button>
+            </div>
+            <ul className="mt-2">
+              {courseDetails.skillgained.map((skill, index) => (
+                <li key={index}>
+                  {skill}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveSkill(index)}
+                    className="ml-2 text-red-500"
+                  >
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="courseName" className="font-semibold">
+              Category ID
+            </label>
             <input
               type="text"
-              id="skillsGained"
-              name="skillsGained"
-              value={courseDetails.skillsGained}
+              id="categoryId"
+              name="categoryId"
+              value={courseDetails.categoryId}
               onChange={handleChange}
               className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500"
             />
           </div>
         </div>
         <button
+          onSubmit={handleSubmit}
           type="submit"
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         >
