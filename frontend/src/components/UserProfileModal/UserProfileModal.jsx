@@ -8,12 +8,16 @@ import {
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import Pagination from "../Pagination/Pagination";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "../../context/authContext";
+import axios from "../../api/axios";
 
 const UserProfileModal = ({ onClose, logout }) => {
+  const { user } = useAuth();
+  console.log(user.username);
   const [editable, setEditable] = useState(false);
-  const [name, setName] = useState("John Doe"); // Dummy user data
-  const [email, setEmail] = useState("john.doe@example.com"); // Dummy user data
-  const [mobile, setMobile] = useState("1234567890"); // Dummy user data
+  const [name, setName] = useState(user.username || "");
+  const [email, setEmail] = useState(user.email || "");
+  const [mobile, setMobile] = useState(user.contactNo || "");
   const [loading, setLoading] = useState(false);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,7 +51,6 @@ const UserProfileModal = ({ onClose, logout }) => {
   };
 
   const handleUpdate = async () => {
-    // Validate fields before updating
     if (!validateFields()) {
       return;
     }
@@ -55,13 +58,12 @@ const UserProfileModal = ({ onClose, logout }) => {
     setLoading(true);
 
     try {
-      // Dummy API call, no actual update
-      // const response = await axios.put(`user/profile/${user._id}`, {
-      //   name,
-      //   email,
-      //   mobile,
-      // });
-      // console.log("User updated successfully:", response.data);
+      const response = await axios.put(`users`, {
+        username: name,
+        email,
+        contactNo: mobile,
+      });
+      console.log("User updated successfully:", response.data);
       SuccessNotification("User updated successfully, Please login back.");
       logout();
       setEditable(false);
