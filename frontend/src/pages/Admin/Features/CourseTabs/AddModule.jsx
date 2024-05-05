@@ -36,7 +36,7 @@ const AddModule = () => {
 
   const renderContent = () => {
     switch (activeTab) {
-      case "Module Details":
+      case "Add Module Details":
         return <AddModuleDetails />;
       case "Add Video":
         return <AddVideoDetails />;
