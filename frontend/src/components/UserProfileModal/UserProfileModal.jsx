@@ -23,6 +23,7 @@ const UserProfileModal = ({ onClose, logout }) => {
   const [mobileError, setMobileError] = useState("");
   const location = useLocation();
   const isAdmin = location.pathname === "/admin"; // Check if the current path is '/admin'
+  const isInstructor = location.pathname === "/instructor"; // Check if the current path is '/instructor'
 
   useEffect(() => {
     // Fetch enrolled courses when the component mounts
@@ -195,7 +196,7 @@ const UserProfileModal = ({ onClose, logout }) => {
             </div>
 
             {/* Enrolled courses section */}
-            {!isAdmin ? (
+            {!(isAdmin || isInstructor) ? (
               <>
                 {" "}
                 <div className="mb-4">

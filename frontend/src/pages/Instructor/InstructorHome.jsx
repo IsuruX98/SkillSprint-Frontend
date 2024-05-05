@@ -1,21 +1,19 @@
 import React, { useState } from "react";
-import UserManagement from "./Features/UserManagement";
 import CourseManagement from "./Features/CourseManagement";
-import NotificationManagement from "./Features/NotificationManagement";
-import PaymentManagement from "./Features/PaymentManagement";
+import EnrollmentManagement from "./Features/EnrollmentManagement";
+import LearnersProgressManagement from "./Features/LearnersProgressManagement";
 
-const AdminHome = () => {
-  const [activeTab, setActiveTab] = useState("User Management");
+const InstructorHome = () => {
+  const [activeTab, setActiveTab] = useState("Course Management");
 
   const handleTabChange = (label) => {
     setActiveTab(label);
   };
 
   const tabs = [
-    "User Management",
     "Course Management",
-    "Notification Management",
-    "Payment Management",
+    "Enrollment Management",
+    "Learners Progress Management",
   ];
 
   const renderTabs = () => {
@@ -36,14 +34,12 @@ const AdminHome = () => {
 
   const renderContent = () => {
     switch (activeTab) {
-      case "User Management":
-        return <UserManagement />;
       case "Course Management":
         return <CourseManagement />;
-      case "Notification Management":
-        return <NotificationManagement />;
-      case "Payment Management":
-        return <PaymentManagement />;
+      case "Enrollment Management":
+        return <EnrollmentManagement />;
+      case "Learners Progress Management":
+        return <LearnersProgressManagement />;
       default:
         return null;
     }
@@ -52,7 +48,7 @@ const AdminHome = () => {
   return (
     <div className="lg:px-32 px-4 py-8 min-h-screen">
       <div className="flex flex-wrap justify-center">
-        <div className="grid lg:grid-cols-2 xl:grid-cols-4 gap-2 w-full">
+        <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-2 w-full">
           {renderTabs()}
         </div>
       </div>
@@ -61,4 +57,4 @@ const AdminHome = () => {
   );
 };
 
-export default AdminHome;
+export default InstructorHome;

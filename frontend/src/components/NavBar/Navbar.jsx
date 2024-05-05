@@ -69,6 +69,7 @@ const Navbar = () => {
   const logout = () => {};
   const location = useLocation();
   const isAdmin = location.pathname === "/admin"; // Check if the current path is '/admin'
+  const isInstructor = location.pathname === "/instructor"; // Check if the current path is '/instructor'
   const [nav, setNav] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
@@ -85,6 +86,15 @@ const Navbar = () => {
     { path: "/notification-management", label: "Notification Management" },
     { path: "/payment-management", label: "Payment Management" },
     { path: "/enrollment-management", label: "Enrollment Management" },
+  ];
+
+  const instructorDropdownItems = [
+    { path: "/course-management", label: "Course Management" },
+    { path: "/enrollment-management", label: "Enrollment Management" },
+    {
+      path: "/learners-progress-management",
+      label: "Learners Progress Management",
+    },
   ];
 
   const defaultDropdownItems = [
@@ -134,14 +144,18 @@ const Navbar = () => {
           <h3 className="font-extrabold text-black">
             <Link to="/" spy={true} smooth={true} duration={500}>
               <div className="cursor-pointer text-2xl">
-                {isAdmin ? "SkillSprint Admin" : "SkillSprint"}
+                {isInstructor
+                  ? "SkillSprint Instructor"
+                  : isAdmin
+                  ? "SkillSprint Admin"
+                  : "SkillSprint"}
               </div>
             </Link>
           </h3>
         </div>
         <div className="flex-grow mx-4">
           {/* Search input */}
-          {!isAdmin && (
+          {!(isInstructor || isAdmin) && (
             <div className="flex-grow mx-4">
               <input
                 type="text"
@@ -153,7 +167,7 @@ const Navbar = () => {
             </div>
           )}
         </div>
-        {!isAdmin && (
+        {!(isInstructor || isAdmin) && (
           <div className="relative inline-block text-left">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -184,7 +198,6 @@ const Navbar = () => {
                 aria-orientation="vertical"
               >
                 <div className="py-1" role="none">
-                  {/* Render admin-specific dropdown items if isAdmin is true */}
                   {defaultDropdownItems.map((item) => (
                     <Link
                       key={item.path}
@@ -306,7 +319,12 @@ const Navbar = () => {
         </h1>
         <ul className="p-4 mt-20">
           {/* Render the same navigation links as in large screen */}
-          {(isAdmin ? adminDropdownItems : defaultDropdownItems).map((item) => (
+          {(isAdmin
+            ? adminDropdownItems
+            : isInstructor
+            ? instructorDropdownItems
+            : defaultDropdownItems
+          ).map((item) => (
             <li
               key={item.path}
               className="p-4 hover:bg-gray-100 hover:text-blue-500"

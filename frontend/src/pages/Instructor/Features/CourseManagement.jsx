@@ -1,16 +1,20 @@
 import React, { useState } from "react";
 import ViewCourses from "./CourseTabs/ViewCourses";
-import CourseDetails from "./CourseTabs/CourseDetails";
+import AddCourse from "./CourseTabs/AddCourse";
+import AddModule from "./CourseTabs/AddModule";
 
 const CourseManagement = () => {
   const [activeTab, setActiveTab] = useState("View Courses");
-  const [selectedCourse, setSelectedCourse] = useState(null);
 
   const handleTabChange = (label) => {
     setActiveTab(label);
   };
 
-  const tabs = [{ label: "View Courses" }, { label: "Course Details" }];
+  const tabs = [
+    { label: "View Courses" },
+    { label: "Add Course" },
+    { label: "Add Module" },
+  ];
 
   const renderTabs = () => {
     return tabs.map((tab) => (
@@ -31,14 +35,11 @@ const CourseManagement = () => {
   const renderContent = () => {
     switch (activeTab) {
       case "View Courses":
-        return (
-          <ViewCourses
-            handleTabChange={handleTabChange}
-            setSelectedCourse={setSelectedCourse}
-          />
-        );
-      case "Course Details":
-        return <CourseDetails course={selectedCourse} />;
+        return <ViewCourses />;
+      case "Add Course":
+        return <AddCourse />;
+      case "Add Module":
+        return <AddModule />;
       default:
         return null;
     }
@@ -47,7 +48,7 @@ const CourseManagement = () => {
   return (
     <div className="">
       <div className="flex flex-wrap justify-center">
-        <div className="grid md:grid-cols-2 gap-2 w-full">{renderTabs()}</div>
+        <div className="grid md:grid-cols-3 gap-2 w-full">{renderTabs()}</div>
       </div>
       <div className="py-5">{renderContent()}</div>
     </div>

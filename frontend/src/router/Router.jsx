@@ -5,6 +5,7 @@ import CoursesPage from "../pages/CoursesPage";
 import CourseDetail from "../pages/CourseDetail";
 import LearnModulePage from "../components/LearnModulePage/LearnModulePage";
 import AdminHome from "../pages/Admin/AdminHome";
+import InstructorHome from "../pages/Instructor/InstructorHome";
 
 const AppRouter = () => {
   return (
@@ -13,6 +14,7 @@ const AppRouter = () => {
       <Route path="/courses" element={<CoursesPage />} />
       <Route path="/details" element={<CourseDetail />} />
       <Route path="/admin" element={<AdminHome />} />
+      <Route path="/instructor" element={<InstructorHome />} />
       <Route path="/learn-module" element={<LearnModulePage />} />
     </Routes>
   );

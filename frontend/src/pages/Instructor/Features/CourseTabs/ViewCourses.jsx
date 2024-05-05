@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "../../../../components/Pagination/Pagination";
 
-const ViewCourses = ({ handleTabChange, setSelectedCourse }) => {
+const ViewCourses = () => {
   const initialCourses = [
     {
       id: 1,
@@ -119,13 +119,6 @@ const ViewCourses = ({ handleTabChange, setSelectedCourse }) => {
   // Calculate total pages for pagination
   const totalPages = Math.ceil(courses.length / coursesPerPage);
 
-  const handleViewDetails = (course) => {
-    setSelectedCourse(course);
-    console.log(course);
-    // Change active tab to "Course Details"
-    handleTabChange("Course Details");
-  };
-
   return (
     <div className="p-6 bg-gray-100 rounded-xl">
       <div className="flex justify-between items-center mb-4">
@@ -159,10 +152,7 @@ const ViewCourses = ({ handleTabChange, setSelectedCourse }) => {
                 <td className="p-3">{course.price}</td>
                 <td className="p-3">{course.duration}</td>
                 <td className="p-3 flex justify-center">
-                  <button
-                    className="bg-blue-500 text-white px-4 py-1 rounded mr-2"
-                    onClick={() => handleViewDetails(course)}
-                  >
+                  <button className="bg-blue-500 text-white px-4 py-1 rounded mr-2">
                     View
                   </button>
                 </td>
