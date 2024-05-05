@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (formData) => {
     try {
-      const response = await axios.post("auth/auth", formData);
+      const response = await axios.post("auth/login", formData);
       Cookies.set("jwt", response.data.token, {
         expires: 30,
       });
@@ -54,7 +54,8 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (formData) => {
     try {
-      const response = await axios.post("auth/register", formData);
+      const response = await axios.post("auth/signup", formData);
+      console.log("hi", formData);
       Cookies.set("jwt", response.data.token, {
         expires: 30,
       });

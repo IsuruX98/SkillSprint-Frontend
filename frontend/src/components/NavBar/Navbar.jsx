@@ -218,7 +218,7 @@ const Navbar = () => {
 
       {/* Auth Links or User Profile Button */}
       <div className="items-center hidden gap-8 lg:flex text-white">
-        {!user ? (
+        {user ? (
           <>
             <button
               onClick={() => setShowProfileModal(true)}
