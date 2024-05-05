@@ -65,8 +65,7 @@ const dummyNotifications = [
 ];
 
 const Navbar = () => {
-  const user = null;
-  const logout = () => {};
+  const { user, logout } = useAuth();
   const location = useLocation();
   const isAdmin = location.pathname === "/admin"; // Check if the current path is '/admin'
   const isInstructor = location.pathname === "/instructor"; // Check if the current path is '/instructor'

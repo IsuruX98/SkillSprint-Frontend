@@ -35,8 +35,16 @@ const AuthModal = ({ isOpen, onClose, mode }) => {
     e.preventDefault();
     setLoading(true);
     try {
+      const { name, email, password, mobile } = formData;
+      const requestData = {
+        userName: name,
+        email: email.trim(),
+        password,
+        contactNo: mobile.trim(),
+      };
+
       if (isLogin) {
-        const response = await login(formData);
+        const response = await login(requestData);
         if (response.success) {
           SuccessNotification("Logged in successfully");
           onClose();
@@ -48,7 +56,7 @@ const AuthModal = ({ isOpen, onClose, mode }) => {
           setLoading(false);
           return;
         }
-        const response = await register(formData);
+        const response = await register(requestData);
         if (response.success) {
           SuccessNotification("Registered successfully");
           onClose();

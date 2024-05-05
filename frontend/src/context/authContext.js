@@ -12,9 +12,11 @@ export const AuthProvider = ({ children }) => {
   const [authLoading, setAuthLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  console.log(user);
+
   const fetchUserById = async (userId) => {
     try {
-      const response = await axios.get(`user/profile/${userId}`);
+      const response = await axios.get(`users/${userId}`);
       const userData = response.data;
       setUser(userData);
     } catch (error) {
@@ -41,11 +43,12 @@ export const AuthProvider = ({ children }) => {
   const login = async (formData) => {
     try {
       const response = await axios.post("auth/login", formData);
-      Cookies.set("jwt", response.data.token, {
+      console.log(response.data);
+      Cookies.set("jwt", response.data.content.token, {
         expires: 30,
       });
       setIsLoggedIn(true);
-      setUser(response.data.user);
+      setUser(response.data.content.user);
       return { success: true, data: response.data };
     } catch (error) {
       return { success: false, error: error.response.data.error };
@@ -55,12 +58,11 @@ export const AuthProvider = ({ children }) => {
   const register = async (formData) => {
     try {
       const response = await axios.post("auth/signup", formData);
-      console.log("hi", formData);
-      Cookies.set("jwt", response.data.token, {
+      Cookies.set("jwt", response.data.content.token, {
         expires: 30,
       });
       setIsLoggedIn(true);
-      setUser(response.data.user);
+      setUser(response.data.content.user);
       return { success: true, data: response.data };
     } catch (error) {
       return { success: false, error: error.response.data.error };
