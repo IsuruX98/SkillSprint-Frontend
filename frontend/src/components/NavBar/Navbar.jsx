@@ -98,7 +98,7 @@ const Navbar = () => {
 
   const defaultDropdownItems = [
     { path: "/courses", label: "Explore courses" },
-    { path: "/", label: "Explore Degrees" },
+    { path: "#", label: "Explore Degrees" },
     // Add any additional default dropdown items here
   ];
 
