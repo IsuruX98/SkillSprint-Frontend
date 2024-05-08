@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.get(`users/${userId}`);
       const userData = response.data;
       setUser(userData);
+      console.log("userData", userData);
     } catch (error) {
       console.error("Error fetching user profile:", error.response.data);
     } finally {

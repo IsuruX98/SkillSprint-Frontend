@@ -98,8 +98,7 @@ const Navbar = () => {
 
   const defaultDropdownItems = [
     { path: "/courses", label: "Explore courses" },
-    { path: "/", label: "About us" },
-    { path: "/", label: "Contact us" },
+    { path: "/", label: "Explore Degrees" },
     // Add any additional default dropdown items here
   ];
 
@@ -341,7 +340,7 @@ const Navbar = () => {
         </ul>
         {/* Sign In and Sign Up buttons */}
         <div className="flex flex-col mx-5">
-          {!user ? (
+          {user ? (
             <button
               onClick={() => setShowProfileModal(true)}
               className="inline-flex mt-8 items-center justify-center gap-2 rounded-md bg-white px-4 py-2 text-sm font-semibold text-blue-500 border shadow-sm transition-all duration-150 hover:bg-[#d1d5db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"

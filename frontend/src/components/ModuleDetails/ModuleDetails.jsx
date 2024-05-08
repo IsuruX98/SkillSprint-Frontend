@@ -79,7 +79,7 @@ const ModuleDetails = ({ module }) => {
           </div>
           <button
             onClick={navigateToLearnModule}
-            className="mt-5 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md block w-full"
+            className="mt-5 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md block md:w-auto w-full"
           >
             Learn Module
           </button>

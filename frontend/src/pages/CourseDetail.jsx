@@ -199,6 +199,7 @@ const CourseDetail = () => {
 
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-2">Course Details</h2>
+
               <ul className="list-disc list-inside text-gray-700">
                 <li>
                   <span className="font-semibold">Level:</span> {course.level}
@@ -212,6 +213,20 @@ const CourseDetail = () => {
                   {course.skillsGained.join(", ")}
                 </li>
               </ul>
+            </div>
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold mb-4">Course Progress</h2>
+              <div className="relative bg-gray-300 h-8 w-full rounded-lg overflow-hidden">
+                {/* Progress Bar */}
+                <div
+                  className="absolute top-0 left-0 bg-blue-500 h-full rounded-lg transition-all"
+                  style={{ width: "50%" }} // Example: 50% completion
+                ></div>
+                {/* Insights on Hover */}
+                <div className="absolute top-0 left-0 h-full w-full flex items-center justify-center text-white text-sm font-bold transition-opacity">
+                  50% Completed
+                </div>
+              </div>
             </div>
           </div>
         </div>
