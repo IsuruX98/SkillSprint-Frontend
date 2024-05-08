@@ -43,6 +43,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (formData) => {
     try {
       const response = await axios.post("auth/login", formData);
+      console.log(response);
       console.log(response.data);
       Cookies.set("jwt", response.data.content.token, {
         expires: 30,
@@ -51,7 +52,17 @@ export const AuthProvider = ({ children }) => {
       setUser(response.data.content.user);
       return { success: true, data: response.data };
     } catch (error) {
-      return { success: false, error: error.response.data.error };
+      let errorMessage = "An error occurred during login.";
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.content
+      ) {
+        const { message } = error.response.data.content;
+        errorMessage = message || errorMessage;
+      }
+      console.log("error", errorMessage);
+      return { success: false, error: errorMessage };
     }
   };
 
@@ -65,7 +76,17 @@ export const AuthProvider = ({ children }) => {
       setUser(response.data.content.user);
       return { success: true, data: response.data };
     } catch (error) {
-      return { success: false, error: error.response.data.error };
+      let errorMessage = "An error occurred during register.";
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.content
+      ) {
+        const { message } = error.response.data.content;
+        errorMessage = message || errorMessage;
+      }
+      console.log("error", errorMessage);
+      return { success: false, error: errorMessage };
     }
   };
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "../../../../components/Pagination/Pagination";
 
-const ViewCourses = ({ handleTabChange, setSelectedCourse }) => {
+const Courses = ({ handleTabChange, setSelectedCourse }) => {
   const initialCourses = [
     {
       id: 1,
@@ -180,4 +180,4 @@ const ViewCourses = ({ handleTabChange, setSelectedCourse }) => {
   );
 };
 
-export default ViewCourses;
+export default Courses;

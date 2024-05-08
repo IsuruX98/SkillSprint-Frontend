@@ -4,8 +4,11 @@ import {
   SuccessNotification,
   ErrorNotification,
 } from "../../../../notifications/notifications";
+import { useAuth } from "../../../../context/authContext";
 
 const AddCourse = () => {
+  const { user } = useAuth();
+  console.log("user", user);
   const [courseDetails, setCourseDetails] = useState({
     courseName: "",
     categoryId: "",

@@ -15,7 +15,7 @@ const UserProfileModal = ({ onClose, logout }) => {
   const { user } = useAuth();
   console.log(user.username);
   const [editable, setEditable] = useState(false);
-  const [name, setName] = useState(user.username || "");
+  const [name, setName] = useState(user.user_Name || "");
   const [email, setEmail] = useState(user.email || "");
   const [mobile, setMobile] = useState(user.contactNo || "");
   const [loading, setLoading] = useState(false);

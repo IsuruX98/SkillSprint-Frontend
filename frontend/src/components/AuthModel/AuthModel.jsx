@@ -49,6 +49,7 @@ const AuthModal = ({ isOpen, onClose, mode }) => {
           SuccessNotification("Logged in successfully");
           onClose();
         } else {
+          console.log(response.error);
           ErrorNotification(response.error);
         }
       } else {
@@ -61,6 +62,7 @@ const AuthModal = ({ isOpen, onClose, mode }) => {
           SuccessNotification("Registered successfully");
           onClose();
         } else {
+          console.log(response.error);
           ErrorNotification(response.error);
         }
       }

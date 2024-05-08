@@ -224,7 +224,7 @@ const Navbar = () => {
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-semibold text-blue-500 shadow-sm border transition-all duration-150 hover:bg-[#d1d5db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             >
               <AiOutlineUser />
-              {user.username}
+              {user.user_Name}
             </button>
             <button
               className="relative flex items-center justify-center text-black"
@@ -347,7 +347,7 @@ const Navbar = () => {
               className="inline-flex mt-8 items-center justify-center gap-2 rounded-md bg-white px-4 py-2 text-sm font-semibold text-blue-500 border shadow-sm transition-all duration-150 hover:bg-[#d1d5db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             >
               <AiOutlineUser />
-              john doe
+              {user.user_Name}
             </button>
           ) : (
             <>

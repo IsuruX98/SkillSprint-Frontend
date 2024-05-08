@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ViewCourses from "./CourseTabs/ViewCourses";
+import Courses from "./CourseTabs/Courses";
 import CourseDetails from "./CourseTabs/CourseDetails";
 
 const CourseManagement = () => {
@@ -32,7 +32,7 @@ const CourseManagement = () => {
     switch (activeTab) {
       case "View Courses":
         return (
-          <ViewCourses
+          <Courses
             handleTabChange={handleTabChange}
             setSelectedCourse={setSelectedCourse}
           />
