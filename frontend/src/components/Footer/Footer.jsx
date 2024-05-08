@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-gray-300 py-8">
-      <div className="max-w-6xl mx-auto px-4">
+    <footer className="bg-gray-900 text-gray-300 py-8 lg:px-32 px-4">
+      <div>
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0 text-center md:text-left">
             <h2 className="text-2xl font-bold mb-2">SkillSprint</h2>
