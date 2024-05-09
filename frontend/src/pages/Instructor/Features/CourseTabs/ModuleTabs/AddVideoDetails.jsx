@@ -1,37 +1,106 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useAuth } from "../../../../../context/authContext";
+import axios from "../../../../../api/axios";
+import LoadingSpinner from "../../../../../components/LoadingSpinner/LoadingSpinner";
+import {
+  SuccessNotification,
+  ErrorNotification,
+} from "../../../../../notifications/notifications";
 
 const AddVideoDetails = () => {
-  // Dummy module names
-  const modules = ["Module X", "Module Y", "Module Z"];
+  const { user } = useAuth();
+  const [courseOptions, setCourseOptions] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [moduleOptions, setModuleOptions] = useState([]);
+  const [selectedModule, setSelectedModule] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get(
+          `course-controller/instructor/${user.userId}`
+        );
+        setCourseOptions(
+          response.data.map((course) => ({
+            id: course.id,
+            name: course.courseName,
+          }))
+        );
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  useEffect(() => {
+    const fetchModules = async () => {
+      try {
+        if (selectedCourse) {
+          const response = await axios.get(
+            `module-controller/${selectedCourse}`
+          );
+
+          if (Array.isArray(response.data)) {
+            setModuleOptions(
+              response.data.map((module) => ({
+                id: module.id,
+                name: module.moduleName,
+              }))
+            );
+          } else {
+            setModuleOptions([]);
+          }
+        } else {
+          setModuleOptions([]);
+        }
+      } catch (error) {
+        console.error("Error fetching modules:", error);
+      }
+    };
+
+    fetchModules();
+  }, [selectedCourse]);
 
   // State variables for form inputs
-  const [module, setModule] = useState("");
+  const [title, setTitle] = useState("");
   const [videoFile, setVideoFile] = useState(null);
   const [videoDuration, setVideoDuration] = useState("");
   const [videoDetails, setVideoDetails] = useState(null);
+
+  console.log(videoFile);
 
   // Ref for video element
   const videoRef = useRef(null);
 
   // Function to handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // You can handle form submission logic here
-    console.log("Form submitted with:", {
-      module,
-      videoFile,
-      videoDuration,
-      videoDetails,
-    });
-    // Reset form fields
-    setModule("");
-    setVideoFile(null);
-    setVideoDuration("");
-    setVideoDetails(null);
-    // Reset video element
-    if (videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.load();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("video", videoFile);
+      formData.append("title", title);
+      formData.append("moduleId", selectedModule);
+
+      await axios.post("content-controller/videos/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      setSuccess(true);
+    } catch (error) {
+      console.error("Error adding video:", error);
+      setError("Error adding video. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,6 +142,27 @@ const AddVideoDetails = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label
+            htmlFor="course"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Course
+          </label>
+          <select
+            id="course"
+            value={selectedCourse}
+            onChange={(e) => setSelectedCourse(e.target.value)}
+            className="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-800"
+          >
+            <option value="">Select a course</option>
+            {courseOptions.map((course) => (
+              <option key={course.id} value={course.id}>
+                {course.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label
             htmlFor="module"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
@@ -80,18 +170,39 @@ const AddVideoDetails = () => {
           </label>
           <select
             id="module"
-            value={module}
-            onChange={(e) => setModule(e.target.value)}
+            value={selectedModule}
+            onChange={(e) => setSelectedModule(e.target.value)}
             className="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-800"
           >
             <option value="">Select a module</option>
-            {modules.map((module, index) => (
-              <option key={index} value={module}>
-                {module}
-              </option>
-            ))}
+            {moduleOptions.length === 0 ? (
+              <option disabled>No modules available for selected course</option>
+            ) : (
+              moduleOptions.map((module) => (
+                <option key={module.id} value={module.id}>
+                  {module.name}
+                </option>
+              ))
+            )}
           </select>
         </div>
+
+        <div>
+          <label
+            htmlFor="title" // Added label for title input
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Video Title
+          </label>
+          <input
+            type="text"
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-800"
+          />
+        </div>
+
         <div>
           <label
             htmlFor="videoFile"
@@ -118,16 +229,26 @@ const AddVideoDetails = () => {
             <p className="text-gray-700 mb-1">Duration: {videoDuration}</p>
           </div>
         )}
+        {videoFile && (
+          <div className="mt-4">
+            <h3 className="text-lg font-medium mb-2">Video Preview</h3>
+            <video ref={videoRef} controls className="w-full rounded-md">
+              <source src={URL.createObjectURL(videoFile)} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        )}
         <div>
           <button
             type="submit"
-            disabled={!videoFile}
+            disabled={!videoFile || loading}
             className={`py-3 mt-8 px-4 bg-blue-600 ${
-              !videoFile && "opacity-50 cursor-not-allowed"
+              (!videoFile || loading) && "opacity-50 cursor-not-allowed"
             } hover:bg-blue-700 rounded-md text-white font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
           >
             Add Video
           </button>
+          {loading && <LoadingSpinner />}
         </div>
       </form>
     </div>
