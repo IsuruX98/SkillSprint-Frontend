@@ -7,18 +7,21 @@ const CourseDetails = ({ course }) => {
 
   // Function to fetch modules for the selected course
   useEffect(() => {
-    const fetchModules = async () => {
-      try {
-        const response = await axios.get(`module-controller/${course.id}`);
-        setModules(response.data); // Set modules data from the response
-      } catch (error) {
-        console.error("Error fetching modules:", error);
-        // Handle error, show error notification, etc.
-      }
-    };
+    // Check if course is provided
+    if (course) {
+      const fetchModules = async () => {
+        try {
+          const response = await axios.get(`module-controller/${course.id}`);
+          setModules(response.data); // Set modules data from the response
+        } catch (error) {
+          console.error("Error fetching modules:", error);
+          // Handle error, show error notification, etc.
+        }
+      };
 
-    fetchModules();
-  }, [course.id]); // Fetch modules whenever the course ID changes
+      fetchModules();
+    }
+  }, [course]); // Fetch modules whenever the course ID changes
 
   const handleApprove = () => {
     // Logic to approve the course (you can implement your own approval mechanism here)
