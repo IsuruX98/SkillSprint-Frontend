@@ -15,6 +15,7 @@ const AddReadingDetails = () => {
   const [selectedCourse, setSelectedCourse] = useState("");
   const [moduleOptions, setModuleOptions] = useState([]);
   const [selectedModule, setSelectedModule] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -74,17 +75,47 @@ const AddReadingDetails = () => {
   console.log(description);
 
   // Function to handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // You can handle form submission logic here
-    console.log("Form submitted with:", {
-      module,
-      readingTitle,
-      description,
-      duration,
-    });
+
+    try {
+      // Make sure all fields are filled
+      if (!selectedModule || !readingTitle || !description || !duration) {
+        ErrorNotification("All fields are required.");
+        return;
+      }
+
+      setLoading(true);
+
+      // Prepare the data to be sent
+      const data = {
+        title: readingTitle,
+        description: description,
+        duration: duration,
+        moduleId: selectedModule,
+      };
+
+      // Send the data to the endpoint
+      const response = await axios.post("reading-controller", data);
+
+      // Handle success response
+      console.log("Reading details added:", response.data);
+
+      // Show success notification
+      SuccessNotification("Reading details added successfully!");
+    } catch (error) {
+      // Handle error response
+      console.error("Error adding reading details:", error);
+
+      // Show error notification
+      ErrorNotification(
+        "Failed to add reading details. Please try again later."
+      );
+    } finally {
+      setLoading(false);
+    }
+
     // Reset form fields
-    setModule("");
     setReadingTitle("");
     setDescription("");
     setDuration("");
@@ -193,6 +224,7 @@ const AddReadingDetails = () => {
           >
             Add Reading
           </button>
+          {loading && <LoadingSpinner />}
         </div>
       </form>
     </div>

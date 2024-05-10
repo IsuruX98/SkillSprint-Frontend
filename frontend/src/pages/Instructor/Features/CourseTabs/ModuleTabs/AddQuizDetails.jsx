@@ -1,9 +1,69 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdAdd, MdDelete } from "react-icons/md";
+import { useAuth } from "../../../../../context/authContext";
+import axios from "../../../../../api/axios";
+import LoadingSpinner from "../../../../../components/LoadingSpinner/LoadingSpinner";
+import {
+  SuccessNotification,
+  ErrorNotification,
+} from "../../../../../notifications/notifications";
 
 const AddQuizDetails = () => {
-  // Dummy module names
-  const modules = ["Module X", "Module Y", "Module Z"];
+  const { user } = useAuth();
+  const [courseOptions, setCourseOptions] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [moduleOptions, setModuleOptions] = useState([]);
+  const [selectedModule, setSelectedModule] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get(
+          `course-controller/instructor/${user.userId}`
+        );
+        setCourseOptions(
+          response.data.map((course) => ({
+            id: course.id,
+            name: course.courseName,
+          }))
+        );
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  useEffect(() => {
+    const fetchModules = async () => {
+      try {
+        if (selectedCourse) {
+          const response = await axios.get(
+            `module-controller/${selectedCourse}`
+          );
+
+          if (Array.isArray(response.data)) {
+            setModuleOptions(
+              response.data.map((module) => ({
+                id: module.id,
+                name: module.moduleName,
+              }))
+            );
+          } else {
+            setModuleOptions([]);
+          }
+        } else {
+          setModuleOptions([]);
+        }
+      } catch (error) {
+        console.error("Error fetching modules:", error);
+      }
+    };
+
+    fetchModules();
+  }, [selectedCourse]);
 
   // State variables for form inputs
   const [module, setModule] = useState("");
@@ -86,6 +146,27 @@ const AddQuizDetails = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label
+            htmlFor="course"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Course
+          </label>
+          <select
+            id="course"
+            value={selectedCourse}
+            onChange={(e) => setSelectedCourse(e.target.value)}
+            className="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-800"
+          >
+            <option value="">Select a course</option>
+            {courseOptions.map((course) => (
+              <option key={course.id} value={course.id}>
+                {course.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label
             htmlFor="module"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
@@ -93,16 +174,20 @@ const AddQuizDetails = () => {
           </label>
           <select
             id="module"
-            value={module}
-            onChange={(e) => setModule(e.target.value)}
+            value={selectedModule}
+            onChange={(e) => setSelectedModule(e.target.value)}
             className="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-800"
           >
             <option value="">Select a module</option>
-            {modules.map((module, index) => (
-              <option key={index} value={module}>
-                {module}
-              </option>
-            ))}
+            {moduleOptions.length === 0 ? (
+              <option disabled>No modules available for selected course</option>
+            ) : (
+              moduleOptions.map((module) => (
+                <option key={module.id} value={module.id}>
+                  {module.name}
+                </option>
+              ))
+            )}
           </select>
         </div>
         <div>
@@ -230,6 +315,7 @@ const AddQuizDetails = () => {
           >
             Add Quiz
           </button>
+          {loading && <LoadingSpinner />}
         </div>
       </form>
     </div>

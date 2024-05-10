@@ -14,8 +14,6 @@ const AddVideoDetails = () => {
   const [moduleOptions, setModuleOptions] = useState([]);
   const [selectedModule, setSelectedModule] = useState("");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -81,7 +79,6 @@ const AddVideoDetails = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
 
     try {
       const formData = new FormData();
@@ -94,11 +91,10 @@ const AddVideoDetails = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-
-      setSuccess(true);
+      SuccessNotification("video added succesfully");
     } catch (error) {
       console.error("Error adding video:", error);
-      setError("Error adding video. Please try again.");
+      ErrorNotification("Error adding video. Please try again.");
     } finally {
       setLoading(false);
     }
