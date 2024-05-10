@@ -3,23 +3,39 @@ import { FaDollarSign, FaUserAlt } from "react-icons/fa";
 import { BsFillStarFill } from "react-icons/bs";
 import ModuleDetails from "../components/ModuleDetails/ModuleDetails";
 import Payment from "../components/Payment/Payment";
+import { useLocation } from "react-router-dom";
+
+// {
+//   "id": "663cd157d19b336b0b8d5b93",
+//   "courseName": "Introduction to Cybersecurity",
+//   "categoryId": "CYB101",
+//   "description": "This course provides an overview of fundamental concepts and principles in cybersecurity, including threats, vulnerabilities, and risk management strategies.",
+//   "price": 99,
+//   "level": "Beginner",
+//   "skillgained": [
+//       "Understanding of cybersecurity fundamentals",
+//       "threat landscape analysis",
+//       "risk assessment techniques"
+//   ],
+//   "status": "PENDING",
+//   "instructorId": "6637a6492041772eca45cdc3",
+//   "coverImgUrl": "http://res.cloudinary.com/dvmgc2jjh/image/upload/v1715261783/vlezr013q4aczlhtpaqx.jpg"
+// }
 
 const CourseDetail = () => {
+  const location = useLocation();
+  const [incomingCourse, setIncomingCourse] = useState(location.state.course);
+  console.log(incomingCourse);
   const [course] = useState({
-    id: 2,
-    title: "Advanced Python Programming",
-    description:
-      "Take your Python skills to the next level with this advanced course. Explore advanced topics such as object-oriented programming, data structures, and algorithms.",
+    id: incomingCourse.id,
+    title: incomingCourse.courseName,
+    description: incomingCourse.description,
     rating: 4.7,
     enrolledCount: 4500,
-    level: "Intermediate",
-    price: 3500.0,
+    level: incomingCourse.level,
+    price: incomingCourse.price,
     duration: "Approximately 8 weeks",
-    skillsGained: [
-      "Object-oriented programming",
-      "Data structures",
-      "Algorithm design",
-    ],
+    skillsGained: incomingCourse.skillgained,
     modules: [
       {
         id: 1,
@@ -147,10 +163,10 @@ const CourseDetail = () => {
   return (
     <div className="py-8 bg-gray-100">
       <div className="lg:px-32 lg:py-12 px-12 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 gap-8">
           <div className="bg-white shadow-md rounded-lg overflow-hidden">
             <img
-              src="https://source.unsplash.com/random/800x600/?programming"
+              src={incomingCourse.coverImgUrl}
               alt="course-logo"
               className="w-full h-full object-cover"
             />

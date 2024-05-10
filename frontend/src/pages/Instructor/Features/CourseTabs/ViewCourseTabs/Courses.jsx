@@ -1,95 +1,43 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "../../../../../components/Pagination/Pagination";
+import axios from "../../../../../api/axios";
+import LoadingSpinner from "../../../../../components/LoadingSpinner/LoadingSpinner";
+import {
+  SuccessNotification,
+  ErrorNotification,
+} from "../../../../../notifications/notifications";
+import { useAuth } from "../../../../../context/authContext";
 
 const Courses = ({ handleTabChange, setSelectedCourse }) => {
-  const initialCourses = [
-    {
-      id: 1,
-      title: "Introduction to React",
-      level: "Beginner",
-      price: 2500.0,
-      duration: "Approximately 6 weeks",
-    },
-    {
-      id: 2,
-      title: "Advanced Python Programming",
-      level: "Intermediate",
-      price: 3500.0,
-      duration: "Approximately 8 weeks",
-    },
-    {
-      id: 3,
-      title: "Machine Learning Fundamentals",
-      level: "Intermediate",
-      price: 4000.0,
-      duration: "Approximately 10 weeks",
-    },
-    {
-      id: 4,
-      title: "Web Development Bootcamp",
-      level: "Advanced",
-      price: 5000.0,
-      duration: "Approximately 12 weeks",
-    },
-    {
-      id: 5,
-      title: "Data Science with Python",
-      level: "Intermediate",
-      price: 3800.0,
-      duration: "Approximately 10 weeks",
-    },
-    {
-      id: 6,
-      title: "iOS App Development",
-      level: "Advanced",
-      price: 4500.0,
-      duration: "Approximately 8 weeks",
-    },
-    {
-      id: 7,
-      title: "Java Programming Masterclass",
-      level: "Advanced",
-      price: 4800.0,
-      duration: "Approximately 10 weeks",
-    },
-    {
-      id: 8,
-      title: "Graphic Design Fundamentals",
-      level: "Beginner",
-      price: 3000.0,
-      duration: "Approximately 8 weeks",
-    },
-    {
-      id: 9,
-      title: "Artificial Intelligence Basics",
-      level: "Intermediate",
-      price: 3800.0,
-      duration: "Approximately 10 weeks",
-    },
-    {
-      id: 10,
-      title: "Cybersecurity Essentials",
-      level: "Intermediate",
-      price: 4000.0,
-      duration: "Approximately 8 weeks",
-    },
-    // Add more courses as needed
-  ];
-
+  const { user } = useAuth();
   const [courses, setCourses] = useState([]);
   const [displayedCourses, setDisplayedCourses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [coursesPerPage] = useState(5); // Number of courses per page
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // Function to filter courses based on search term
-  const filterCourses = (term) => {
-    const filteredCourses = initialCourses.filter((course) =>
-      course.title.toLowerCase().includes(term.toLowerCase())
-    );
-    setCourses(filteredCourses);
-    setCurrentPage(1); // Reset current page when search term changes
-  };
+  //console.log("hi", user.userId);
+
+  // Function to fetch courses from API
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `course-controller/instructor/${user.userId}`
+        );
+        setCourses(response.data); // Assuming response.data is an array of course objects
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+        setLoading(false);
+        // Handle error, show error notification, etc.
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   // Pagination logic to slice the courses array based on current page
   useEffect(() => {
@@ -108,20 +56,19 @@ const Courses = ({ handleTabChange, setSelectedCourse }) => {
   const handleSearch = (event) => {
     const term = event.target.value;
     setSearchTerm(term);
-    filterCourses(term);
+    // Filter courses based on search term
+    const filteredCourses = courses.filter((course) =>
+      course.courseName.toLowerCase().includes(term.toLowerCase())
+    );
+    setDisplayedCourses(filteredCourses);
+    setCurrentPage(1); // Reset current page when search term changes
   };
-
-  // Set initial courses and display initial courses on the first page
-  useEffect(() => {
-    filterCourses(searchTerm);
-  }, [searchTerm]);
 
   // Calculate total pages for pagination
   const totalPages = Math.ceil(courses.length / coursesPerPage);
 
   const handleViewDetails = (course) => {
     setSelectedCourse(course);
-    console.log(course);
     // Change active tab to "Course Details"
     handleTabChange("Course Details");
   };
@@ -138,39 +85,52 @@ const Courses = ({ handleTabChange, setSelectedCourse }) => {
         />
         {/* Add view button here if needed */}
       </div>
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr>
-              <th className="p-3 text-left">ID</th>
-              <th className="p-3 text-left">Title</th>
-              <th className="p-3 text-left">Level</th>
-              <th className="p-3 text-left">Price</th>
-              <th className="p-3 text-left">Duration</th>
-              <th className="p-3 text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {displayedCourses.map((course) => (
-              <tr key={course.id} className="border-t">
-                <td className="p-3">{course.id}</td>
-                <td className="p-3">{course.title}</td>
-                <td className="p-3">{course.level}</td>
-                <td className="p-3">{course.price}</td>
-                <td className="p-3">{course.duration}</td>
-                <td className="p-3 flex justify-center">
-                  <button
-                    className="bg-blue-500 text-white px-4 py-1 rounded mr-2"
-                    onClick={() => handleViewDetails(course)}
-                  >
-                    View
-                  </button>
-                </td>
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr>
+                <th className="p-3 text-left">Image</th>
+
+                <th className="p-3 text-left">Title</th>
+                <th className="p-3 text-left">Category ID</th>
+                <th className="p-3 text-left">Level</th>
+                <th className="p-3 text-left">Price</th>
+
+                <th className="p-3 text-center">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {displayedCourses.map((course) => (
+                <tr key={course.id} className="border-t">
+                  <td className="p-3">
+                    <img
+                      src={course.coverImgUrl}
+                      alt={course.courseName}
+                      className="w-24 h-16"
+                    />
+                  </td>
+                  <td className="p-3">{course.courseName}</td>
+                  <td className="p-3">{course.categoryId}</td>
+                  <td className="p-3">{course.level}</td>
+                  <td className="p-3">$ {course.price}</td>
+
+                  <td className="p-3 flex justify-center">
+                    <button
+                      className="bg-blue-500 text-white px-4 py-1 rounded mr-2"
+                      onClick={() => handleViewDetails(course)}
+                    >
+                      View
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

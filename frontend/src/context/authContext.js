@@ -2,7 +2,6 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 import axios from "../api/axios";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
-import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
@@ -12,7 +11,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigate = useNavigate();
 
   console.log(user);
 
@@ -31,29 +29,35 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const jwtToken = Cookies.get("jwt");
+    console.log("JWT Token:", jwtToken);
+
     const userIsLoggedIn = jwtToken ? true : false;
+    console.log("User is logged in:", userIsLoggedIn);
+
     setIsLoggedIn(userIsLoggedIn);
 
     if (userIsLoggedIn) {
-      const decodedToken = jwtDecode(jwtToken);
-      const userId = decodedToken.userId;
-      fetchUserById(userId);
+      try {
+        const decodedToken = jwtDecode(jwtToken);
+        const userId = decodedToken.userId;
+        console.log("User ID:", userId);
+
+        fetchUserById(userId);
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        setAuthLoading(false);
+      }
     } else {
-      setAuthLoading(false); // If user is not logged in, set loading to false
+      setAuthLoading(false);
     }
   }, []);
 
   const login = async (formData) => {
     try {
       const response = await axios.post("auth/login", formData);
-      console.log(response);
-      console.log(response.data);
-      Cookies.set("jwt", response.data.content.token, {
-        expires: 30,
-      });
+      Cookies.set("jwt", response.data.content.token, { expires: 30 });
       setIsLoggedIn(true);
       setUser(response.data.content.user);
-
       return { success: true, data: response.data };
     } catch (error) {
       let errorMessage = "An error occurred during login.";
