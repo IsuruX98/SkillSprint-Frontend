@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaUserAlt } from "react-icons/fa";
+import { FaDollarSign, FaUserAlt } from "react-icons/fa";
 import { BsFillStarFill } from "react-icons/bs";
 import ModuleDetails from "../components/ModuleDetails/ModuleDetails";
 import Payment from "../components/Payment/Payment";
@@ -174,6 +174,10 @@ const CourseDetail = () => {
               <div className="flex items-center">
                 <FaUserAlt className="text-gray-700 mr-1" />
                 <p className="text-gray-700">{course.level}</p>
+              </div>
+              <div className="flex items-center">
+                <FaDollarSign className="text-green-500 mr-1" />{" "}
+                <p className="text-gray-700">19.99</p>
               </div>
             </div>
 

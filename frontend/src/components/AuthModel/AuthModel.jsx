@@ -8,12 +8,14 @@ import {
   SuccessNotification,
   ErrorNotification,
 } from "../../notifications/notifications";
+import { useNavigate } from "react-router-dom";
 
 const AuthModal = ({ isOpen, onClose, mode }) => {
   const [isLogin, setIsLogin] = useState(mode === "login");
-  const { register, login } = useAuth();
+  const { register, login, user } = useAuth();
   // const register = () => {};
   // const login = () => {};
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -45,8 +47,33 @@ const AuthModal = ({ isOpen, onClose, mode }) => {
 
       if (isLogin) {
         const response = await login(requestData);
-        if (response.success) {
-          SuccessNotification("Logged in successfully");
+        console.log(response.data.content.user.userType);
+        if (
+          response.success &&
+          response.data.content.user.userType == "instructor"
+        ) {
+          SuccessNotification(
+            `Welcome Instructor ${response.data.content.user.user_Name}`
+          );
+          navigate("/");
+          onClose();
+        } else if (
+          response.success &&
+          response.data.content.user.userType == "admin"
+        ) {
+          SuccessNotification(
+            `Welcome Admin ${response.data.content.user.user_Name}`
+          );
+          navigate("/");
+          onClose();
+        } else if (
+          response.success &&
+          response.data.content.user.userType == "student"
+        ) {
+          SuccessNotification(
+            `Welcome Student ${response.data.content.user.user_Name}`
+          );
+          navigate("/");
           onClose();
         } else {
           console.log(response.error);
@@ -60,7 +87,18 @@ const AuthModal = ({ isOpen, onClose, mode }) => {
         const response = await register(requestData);
         if (response.success) {
           SuccessNotification("Registered successfully");
-          onClose();
+          if (user.userType == "student") {
+            navigate("/instructor");
+            onClose();
+          } else if (user.userType == "admin") {
+            navigate("/admin");
+            onClose();
+          } else if (user.userType == "instructor") {
+            navigate("/instructor");
+            onClose();
+          } else {
+            onClose();
+          }
         } else {
           console.log(response.error);
           ErrorNotification(response.error);

@@ -58,8 +58,8 @@ const UserProfileModal = ({ onClose, logout }) => {
     setLoading(true);
 
     try {
-      const response = await axios.put(`users`, {
-        username: name,
+      const response = await axios.put(`users/${user.userId}`, {
+        userName: name,
         email,
         contactNo: mobile,
       });
@@ -176,7 +176,7 @@ const UserProfileModal = ({ onClose, logout }) => {
                 } text-black bg-gray-100`}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                disabled={!editable}
+                disabled
               />
               {emailError && <p className="text-red-500">{emailError}</p>}
             </div>

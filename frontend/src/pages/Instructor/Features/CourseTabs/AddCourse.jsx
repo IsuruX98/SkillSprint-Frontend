@@ -168,7 +168,7 @@ const AddCourse = () => {
           </div>
           <div className="flex flex-col">
             <label htmlFor="price" className="font-semibold">
-              Price
+              Price in $
             </label>
             <input
               type="text"

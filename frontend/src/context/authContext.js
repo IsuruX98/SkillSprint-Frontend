@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 import axios from "../api/axios";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
@@ -11,6 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   console.log(user);
 
@@ -51,6 +53,7 @@ export const AuthProvider = ({ children }) => {
       });
       setIsLoggedIn(true);
       setUser(response.data.content.user);
+
       return { success: true, data: response.data };
     } catch (error) {
       let errorMessage = "An error occurred during login.";
