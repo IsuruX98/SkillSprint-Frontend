@@ -1,10 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CourseManagement from "./Features/CourseManagement";
 import EnrollmentManagement from "./Features/EnrollmentManagement";
 import LearnersProgressManagement from "./Features/LearnersProgressManagement";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/authContext";
+import { ErrorNotification } from "../../notifications/notifications";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 const InstructorHome = () => {
   const [activeTab, setActiveTab] = useState("Course Management");
+  const navigate = useNavigate();
+  const { user, authLoading } = useAuth();
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/");
+      ErrorNotification("Please log in to access Instructor Dashboard.");
+    }
+  }, [authLoading, user, navigate]);
 
   const handleTabChange = (label) => {
     setActiveTab(label);
@@ -44,6 +57,10 @@ const InstructorHome = () => {
         return null;
     }
   };
+
+  if (authLoading || !user) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className="lg:px-32 px-4 py-8 min-h-screen">
