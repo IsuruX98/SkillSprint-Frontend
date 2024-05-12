@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const ModuleDetails = ({ module }) => {
+const ModuleDetails = ({ module, index }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   const navigateToLearnModule = () => {
-    // Pass module data through location state
-    navigate("/learn-module", { state: { module: module } });
+    // Pass module data and index through location state
+    navigate("/learn-module", { state: { module: module, index: index } });
   };
 
   const toggleAccordion = () => {

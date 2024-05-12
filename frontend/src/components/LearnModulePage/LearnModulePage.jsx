@@ -27,7 +27,9 @@ const ReadingComponent = ({ reading }) => {
 
 const LearnModulePage = () => {
   const location = useLocation();
-  const { module } = location.state;
+  const { module, index } = location.state;
+
+  console.log("index", index);
 
   const { user } = useAuth();
 
@@ -202,7 +204,7 @@ const LearnModulePage = () => {
                   {module.quizDTO.title}
                 </h3>
                 <p className="text-gray-600">{module.quizDTO.description}</p>
-                <p className="text-sm text-gray-500">Duration: 30 mins</p>
+                <p className="text-sm text-gray-500 mt-5">Duration: 30 mins</p>
                 <div className="flex items-center mt-6">
                   <button
                     className="bg-green-500 text-white px-3 py-1 rounded"

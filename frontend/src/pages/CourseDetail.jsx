@@ -6,24 +6,37 @@ import Payment from "../components/Payment/Payment";
 import { useLocation } from "react-router-dom";
 import axios from "../api/axios";
 import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
+import { useAuth } from "../context/authContext";
+import {
+  ErrorNotification,
+  SuccessNotification,
+} from "../notifications/notifications";
 
 const CourseDetail = () => {
+  const { user } = useAuth();
   const location = useLocation();
-  const [loading, setLoading] = useState(true); // Introduce loading state
+  const [loading, setLoading] = useState(true);
   const [incomingCourse, setIncomingCourse] = useState(location.state.course);
-  const [course, setCourse] = useState(null); // Rename state to 'course'
-
-  console.log(course);
+  const [course, setCourse] = useState(null);
+  const [progress, setProgress] = useState(44);
+  const [enrolledCourses, setEnrolledCourses] = useState([
+    "66408230e885811075ea61e11",
+    "courseId2",
+    "courseId3",
+  ]);
+  const [showPayment, setShowPayment] = useState(false);
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
         const response = await axios.get(
-          "course-controller/all-courses/66408230e885811075ea61e1"
+          `course-controller/all-courses/${incomingCourse.id}`
         );
         const data = await response.data;
-        setCourse(data); // Set course data
-        setLoading(false); // Set loading to false after data is fetched
+        setCourse(data);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching course data:", error);
       }
@@ -32,15 +45,45 @@ const CourseDetail = () => {
     fetchCourseData();
   }, []);
 
-  const [isEnrolled, setIsEnrolled] = useState(false);
-  const [showPayment, setShowPayment] = useState(false);
+  useEffect(() => {
+    // Check if the current course ID is present in enrolledCourses
+    setIsEnrolled(enrolledCourses.includes(incomingCourse.id));
+  }, [enrolledCourses, incomingCourse.id]);
+
+  useEffect(() => {
+    const fetchEnrolledCourses = async () => {
+      try {
+        const response = await axios.get("endpoint-for-enrolled-courses");
+        const enrolledCoursesData = await response.data;
+        setEnrolledCourses(enrolledCoursesData);
+      } catch (error) {
+        console.error("Error fetching enrolled courses:", error);
+      }
+    };
+
+    fetchEnrolledCourses();
+  }, []);
 
   const handleEnroll = () => {
     setShowPayment(true);
   };
 
+  const handlePaymentSuccess = () => {
+    setPaymentSuccess(true);
+    setIsEnrolled(true);
+    SuccessNotification("Enrolled Successfully");
+  };
+
+  // Run the logic when payment success and enrollment are true
+  useEffect(() => {
+    if (paymentSuccess && isEnrolled) {
+      // Perform actions after successful enrollment and payment
+      console.log("Enrollment and Payment Success!");
+    }
+  }, [paymentSuccess, isEnrolled]);
+
   if (loading) {
-    return <LoadingSpinner />; // Show loading spinner while fetching data
+    return <LoadingSpinner />;
   }
 
   return (
@@ -74,24 +117,27 @@ const CourseDetail = () => {
               </div>
               <div className="flex items-center">
                 <FaDollarSign className="text-green-500 mr-1" />{" "}
-                <p className="text-gray-700">19.99</p>
+                <p className="text-gray-700">{course.price}</p>
               </div>
             </div>
 
-            <div className="mb-4">
-              <button
-                className={`w-full py-2 rounded-md text-white ${
-                  isEnrolled
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-blue-500 hover:bg-blue-600"
-                }`}
-                onClick={handleEnroll}
-              >
-                {course.isEnrolled ? "Already Enrolled" : "Enroll Now"}
-              </button>
-            </div>
+            {!isEnrolled && (
+              <div className="mb-4">
+                <button
+                  className={`w-full py-2 rounded-md text-white bg-blue-500 hover:bg-blue-600`}
+                  onClick={handleEnroll}
+                >
+                  Enroll Now
+                </button>
+              </div>
+            )}
+
             {showPayment && (
-              <Payment data={course} onClose={() => setShowPayment(false)} />
+              <Payment
+                data={course}
+                onSuccess={handlePaymentSuccess}
+                onClose={() => setShowPayment(false)}
+              />
             )}
 
             <div className="text-gray-600 mb-4">
@@ -120,11 +166,11 @@ const CourseDetail = () => {
                 {/* Progress Bar */}
                 <div
                   className="absolute top-0 left-0 bg-blue-500 h-full rounded-lg transition-all"
-                  style={{ width: "50%" }} // Example: 50% completion
+                  style={{ width: `${progress}%` }} // Example: 50% completion
                 ></div>
                 {/* Insights on Hover */}
                 <div className="absolute top-0 left-0 h-full w-full flex items-center justify-center text-white text-sm font-bold transition-opacity">
-                  50% Completed
+                  {progress}% Completed
                 </div>
               </div>
             </div>
@@ -133,8 +179,8 @@ const CourseDetail = () => {
 
         <div className="bg-white shadow-md rounded-lg px-6 py-8 mt-8">
           <h2 className="text-xl font-semibold mb-4">Modules</h2>
-          {course.moduleResponseDTOList.map((module) => (
-            <ModuleDetails key={module.id} module={module} />
+          {course.moduleResponseDTOList.map((module, index) => (
+            <ModuleDetails key={module.id} module={module} index={index} />
           ))}
         </div>
       </div>

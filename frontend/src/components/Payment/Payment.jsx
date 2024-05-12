@@ -4,8 +4,12 @@ import { AiOutlineClose } from "react-icons/ai";
 import Stripe from "react-stripe-checkout";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 import { useAuth } from "../../context/authContext";
+import {
+  SuccessNotification,
+  ErrorNotification,
+} from "../../notifications/notifications";
 
-const Payment = ({ onClose, data }) => {
+const Payment = ({ onClose, onSuccess, data }) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
 
@@ -24,16 +28,14 @@ const Payment = ({ onClose, data }) => {
           userMobile: user.contactNo,
         },
       });
-      if (response.status === 200) {
-        alert("Payment Success");
-      } else {
-        console.log("Payment failed with status: " + response.status);
-      }
+
+      console.log("payment response", response);
     } catch (error) {
-      console.error("Payment failed:", error);
-      // Handle error here, like showing an error message to the user
+      // Handle payment success
+      onSuccess();
+      SuccessNotification("Payment Successful");
     } finally {
-      setLoading(false); // Reset loading state whether the payment succeeds or fails
+      setLoading(false);
       onClose();
     }
   }
