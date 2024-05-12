@@ -18,22 +18,22 @@ const Payment = ({ onClose, onSuccess, data }) => {
   async function handleToken(token) {
     try {
       setLoading(true); // Set loading state to true when payment process starts
-      const response = await axios.post("payment/charge", "", {
-        headers: {
-          token: token.id,
-          amount: data.price,
-          courseName: data.title,
-          userName: user.user_Name,
-          userEmail: user.email,
-          userMobile: user.contactNo,
-        },
-      });
-
-      console.log("payment response", response);
-    } catch (error) {
+      const response = await axios.post(
+        `payment/charge/${user.userId}/${data.id}/${data.courseName}/${user.user_Name}/${user.email}/${user.contactNo}`,
+        "",
+        {
+          headers: {
+            token: token.id,
+            amount: data.price,
+          },
+        }
+      );
       // Handle payment success
       onSuccess();
       SuccessNotification("Payment Successful");
+      console.log("payment response", response);
+    } catch (error) {
+      ErrorNotification("Error");
     } finally {
       setLoading(false);
       onClose();

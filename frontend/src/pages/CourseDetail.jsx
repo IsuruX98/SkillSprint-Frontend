@@ -23,8 +23,7 @@ const CourseDetail = () => {
   const [showPayment, setShowPayment] = useState(false);
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
-
-  console.log("enrolledCourses", enrolledCourses);
+  const [enrollmentId, setEnrollmentId] = useState(null); // Added state to hold the enrollment ID
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -41,11 +40,13 @@ const CourseDetail = () => {
     };
 
     fetchCourseData();
-  }, []);
+  }, [incomingCourse.id]);
 
   useEffect(() => {
     // Check if the current course ID is present in enrolledCourses
-    setIsEnrolled(enrolledCourses.includes(incomingCourse.id));
+    setIsEnrolled(
+      enrolledCourses.some((course) => course.courseId === incomingCourse.id)
+    );
   }, [enrolledCourses, incomingCourse.id]);
 
   useEffect(() => {
@@ -60,7 +61,7 @@ const CourseDetail = () => {
     };
 
     fetchEnrolledCourses();
-  }, []);
+  }, [showPayment, paymentSuccess]); // Fetch enrolled courses whenever showPayment or paymentSuccess changes
 
   const handleEnroll = () => {
     setShowPayment(true);
@@ -69,6 +70,8 @@ const CourseDetail = () => {
   const handlePaymentSuccess = () => {
     setPaymentSuccess(true);
     setIsEnrolled(true);
+    // Update local storage to reflect enrollment status
+    localStorage.setItem("enrollmentStatus", "enrolled");
   };
 
   // Run the logic when payment success and enrollment are true
@@ -91,6 +94,40 @@ const CourseDetail = () => {
 
     enrollUser();
   }, [paymentSuccess, isEnrolled]);
+
+  const handleUnenroll = async () => {
+    try {
+      // Ensure that enrollmentId is not null before attempting to unenroll
+      if (enrollmentId) {
+        await axios.delete(`course-enrollment/unenroll/${enrollmentId}`);
+        // After successful unenrollment, you may want to update the enrolledCourses state
+        const updatedEnrolledCourses = enrolledCourses.filter(
+          (course) => course.id !== enrollmentId
+        );
+        setEnrolledCourses(updatedEnrolledCourses);
+        setIsEnrolled(false);
+        SuccessNotification("Unenrollment Successful");
+        // Remove enrollment status from local storage
+        localStorage.removeItem("enrollmentStatus");
+      } else {
+        // Handle the case where enrollmentId is null
+        ErrorNotification("Enrollment ID not found");
+      }
+    } catch (error) {
+      console.error("Error unenrolling user:", error);
+      ErrorNotification("Unenrollment Failed");
+    }
+  };
+
+  // Find the relevant enrollment ID for the current course
+  useEffect(() => {
+    const relevantEnrollment = enrolledCourses.find(
+      (course) => course.courseId === incomingCourse.id
+    );
+    if (relevantEnrollment) {
+      setEnrollmentId(relevantEnrollment.id);
+    }
+  }, [enrolledCourses, incomingCourse.id]);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -142,6 +179,20 @@ const CourseDetail = () => {
               </div>
             )}
 
+            {isEnrolled && (
+              <div className="mb-4">
+                <button
+                  className={`w-full py-2 rounded-md text-white bg-red-500 hover:bg-red-600`}
+                  onClick={handleUnenroll}
+                >
+                  Unenroll
+                </button>
+                <p className="text-sm text-red-600 mt-1">
+                  Warning: No refunds upon unenrollment.
+                </p>
+              </div>
+            )}
+
             {showPayment && (
               <Payment
                 data={course}
@@ -149,10 +200,6 @@ const CourseDetail = () => {
                 onClose={() => setShowPayment(false)}
               />
             )}
-
-            <div className="text-gray-600 mb-4">
-              <strong>{course.enrolledCount}</strong> Already Enrolled
-            </div>
 
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-2">Course Details</h2>
@@ -189,9 +236,13 @@ const CourseDetail = () => {
 
         <div className="bg-white shadow-md rounded-lg px-6 py-8 mt-8">
           <h2 className="text-xl font-semibold mb-4">Modules</h2>
-          {course.moduleResponseDTOList.map((module, index) => (
-            <ModuleDetails key={module.id} module={module} index={index} />
-          ))}
+          {course.moduleResponseDTOList ? (
+            course.moduleResponseDTOList.map((module, index) => (
+              <ModuleDetails key={module.id} module={module} index={index} />
+            ))
+          ) : (
+            <p>No modules available for this course.</p>
+          )}
         </div>
       </div>
     </div>
