@@ -5,7 +5,7 @@ const LearnModulePage = () => {
   const location = useLocation();
   const { module } = location.state;
 
-  console.log(module);
+  console.log("module", module);
 
   const [openSection, setOpenSection] = useState("");
   const [quizModalOpen, setQuizModalOpen] = useState(false);
@@ -45,10 +45,17 @@ const LearnModulePage = () => {
     closeQuizModal();
   };
 
+  // Helper function to convert duration from seconds to minutes and seconds format
+  const formatDuration = (durationInSeconds) => {
+    const minutes = Math.floor(durationInSeconds / 60);
+    const seconds = Math.round(durationInSeconds % 60);
+    return `${minutes} min ${seconds} sec`;
+  };
+
   return (
     <div className="min-h-screen lg:px-32 lg:py-12 px-12 py-12">
       <div>
-        <h1 className="text-3xl font-bold mb-4">{module.title}</h1>
+        <h1 className="text-3xl font-bold mb-4">{module.moduleName}</h1>
         <p className="text-lg mb-10 mt-5 bg-gray-100 rounded-xl p-5">
           Welcome to the learning module! This module is designed to help you
           grasp the concepts effectively. Below are the instructions to maximize
@@ -92,16 +99,15 @@ const LearnModulePage = () => {
           </div>
           {isSectionOpen("videos") && (
             <div className="p-4 bg-gray-100">
-              {module.videos.map((video, index) => (
+              {module.videoDTOList.map((video, index) => (
                 <div key={index} className="mb-4">
                   <h3 className="text-lg font-medium mb-1">{video.title}</h3>
-                  <p className="text-gray-600 mt-4">{video.description}</p>
                   <p className="text-sm text-gray-500 mt-4">
-                    Duration: {video.duration}
+                    Duration: {formatDuration(video.duration)}
                   </p>
                   <div className="mt-10">
                     <video controls className="w-full" key={video.title}>
-                      <source src={video.link} type="video/mp4" />
+                      <source src={video.url} type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
                   </div>
@@ -127,12 +133,14 @@ const LearnModulePage = () => {
           </div>
           {isSectionOpen("readings") && (
             <div className="p-4 bg-gray-100">
-              {module.readings.map((reading, index) => (
+              {module.readingDTOList.map((reading, index) => (
                 <div key={index} className="mb-4">
                   <h3 className="text-lg font-medium mb-1">{reading.title}</h3>
-                  <p className="text-gray-600 mt-4">{reading.description}</p>
+                  <div
+                    dangerouslySetInnerHTML={{ __html: reading.description }}
+                  ></div>
                   <p className="text-sm mt-4 text-gray-500">
-                    Duration: {reading.duration}
+                    Duration: {reading.duration} mins
                   </p>
                 </div>
               ))}

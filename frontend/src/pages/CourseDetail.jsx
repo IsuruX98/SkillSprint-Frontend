@@ -19,7 +19,7 @@ const CourseDetail = () => {
     const fetchCourseData = async () => {
       try {
         const response = await axios.get(
-          "course-controller/all-courses/663cd157d19b336b0b8d5b93"
+          "course-controller/all-courses/66408230e885811075ea61e1"
         );
         const data = await response.data;
         setCourse(data); // Set course data

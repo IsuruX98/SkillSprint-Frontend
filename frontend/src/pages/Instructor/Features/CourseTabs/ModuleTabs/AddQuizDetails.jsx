@@ -65,6 +65,8 @@ const AddQuizDetails = () => {
     fetchModules();
   }, [selectedCourse]);
 
+  console.log("selectedModule", selectedModule);
+
   // State variables for form inputs
   const [module, setModule] = useState("");
   const [quizTitle, setQuizTitle] = useState("");
@@ -74,20 +76,40 @@ const AddQuizDetails = () => {
   ]);
 
   // Function to handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // You can handle form submission logic here
-    console.log("Form submitted with:", {
-      module,
-      quizTitle,
-      quizDescription,
-      questions,
-    });
-    // Reset form fields
-    setModule("");
-    setQuizTitle("");
-    setQuizDescription("");
-    setQuestions([{ question: "", options: ["", ""], correctAnswer: "" }]);
+    setLoading(true); // Set loading state to true while sending the request
+
+    try {
+      const quizData = {
+        moduleId: selectedModule, // Assuming selectedModule is the ID of the selected module
+        title: quizTitle,
+        description: quizDescription,
+        questions: questions.map((question) => ({
+          question: question.question,
+          options: question.options,
+        })),
+        correctAnswers: questions.map((question) => question.correctAnswer),
+      };
+
+      // Send the request to the API
+      const response = await axios.post("quiz/add", quizData);
+
+      // Handle success notification
+      SuccessNotification("Quiz added successfully");
+
+      // Reset form fields
+      setModule("");
+      setQuizTitle("");
+      setQuizDescription("");
+      setQuestions([{ question: "", options: ["", ""], correctAnswer: "" }]);
+    } catch (error) {
+      console.error("Error adding quiz:", error);
+      // Handle error notification
+      ErrorNotification("Failed to add quiz. Please try again later.");
+    } finally {
+      setLoading(false); // Set loading state back to false after request completes
+    }
   };
 
   // Function to add a new question to the quiz

@@ -14,6 +14,13 @@ const ModuleDetails = ({ module }) => {
     setIsOpen(!isOpen);
   };
 
+  // Helper function to convert duration from seconds to minutes and seconds format
+  const formatDuration = (durationInSeconds) => {
+    const minutes = Math.floor(durationInSeconds / 60);
+    const seconds = Math.round(durationInSeconds % 60);
+    return `${minutes} min ${seconds} sec`;
+  };
+
   return (
     <div className="border-t border-gray-200">
       <button
@@ -44,38 +51,34 @@ const ModuleDetails = ({ module }) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <h3 className="text-lg font-medium">Videos</h3>
-              {/* <ul className="mt-2 space-y-1">
+              <ul className="mt-2 space-y-1">
                 {module.videoDTOList.map((video, index) => (
                   <li key={index}>
                     <a href={video.link} className="hover:underline">
-                      {video.title} ({video.duration})
+                      {video.title} ({formatDuration(video.duration)})
                     </a>
                   </li>
                 ))}
-              </ul> */}
+              </ul>
             </div>
             <div>
               <h3 className="text-lg font-medium">Readings</h3>
               <ul className="mt-2 space-y-1">
-                {/* {module.readingDTOList.map((reading, index) => (
+                {module.readingDTOList.map((reading, index) => (
                   <li key={index}>
                     <span>
-                      {reading.title} ({reading.duration})
+                      {reading.title} ({reading.duration} min)
                     </span>
                   </li>
-                ))} */}
+                ))}
               </ul>
             </div>
             <div>
               <h3 className="text-lg font-medium">Quizzes</h3>
               <ul className="mt-2 space-y-1">
-                {/* {module.quizDTO.map((quiz, index) => (
-                  <li key={index}>
-                    <span>
-                      {quiz.title} ({quiz.duration})
-                    </span>
-                  </li>
-                ))} */}
+                <li>
+                  <span>{module.quizDTO.title} (30 min)</span>
+                </li>
               </ul>
             </div>
           </div>

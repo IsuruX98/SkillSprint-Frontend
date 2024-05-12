@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import UserManagement from "./Features/UserManagement";
 import CourseManagement from "./Features/CourseManagement";
-import NotificationManagement from "./Features/NotificationManagement";
 import PaymentManagement from "./Features/PaymentManagement";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
@@ -24,12 +23,7 @@ const AdminHome = () => {
     setActiveTab(label);
   };
 
-  const tabs = [
-    "User Management",
-    "Course Management",
-    "Notification Management",
-    "Payment Management",
-  ];
+  const tabs = ["User Management", "Course Management", "Payment Management"];
 
   const renderTabs = () => {
     return tabs.map((label) => (
@@ -53,8 +47,6 @@ const AdminHome = () => {
         return <UserManagement />;
       case "Course Management":
         return <CourseManagement />;
-      case "Notification Management":
-        return <NotificationManagement />;
       case "Payment Management":
         return <PaymentManagement />;
       default:
@@ -69,7 +61,7 @@ const AdminHome = () => {
   return (
     <div className="lg:px-32 px-4 py-8 min-h-screen">
       <div className="flex flex-wrap justify-center">
-        <div className="grid lg:grid-cols-2 xl:grid-cols-4 gap-2 w-full">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-2 w-full">
           {renderTabs()}
         </div>
       </div>

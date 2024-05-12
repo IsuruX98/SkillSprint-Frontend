@@ -113,7 +113,7 @@ const Courses = ({ handleTabChange, setSelectedCourse }) => {
 
                   <td className="p-3 flex justify-center">
                     <button
-                      className="bg-blue-500 text-white px-4 py-1 rounded mr-2"
+                      className="bg-blue-500 text-white px-4 py-1 rounded"
                       onClick={() => handleViewDetails(course)}
                     >
                       View
