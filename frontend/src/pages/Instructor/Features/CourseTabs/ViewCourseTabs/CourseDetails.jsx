@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "../../../../../api/axios"; // Import axios for API requests
 
 const CourseDetails = ({ course }) => {
-  const [approvalStatus, setApprovalStatus] = useState("Pending");
   const [modules, setModules] = useState([]); // State to store modules data
 
   // Function to fetch modules for the selected course
@@ -22,16 +21,6 @@ const CourseDetails = ({ course }) => {
       fetchModules();
     }
   }, [course]); // Fetch modules whenever the course ID changes
-
-  const handleApprove = () => {
-    // Logic to approve the course (you can implement your own approval mechanism here)
-    setApprovalStatus("Approved");
-  };
-
-  const handleDecline = () => {
-    // Logic to decline the course
-    setApprovalStatus("Declined");
-  };
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
@@ -89,22 +78,21 @@ const CourseDetails = ({ course }) => {
             </ul>
           </div>
           <div className="mb-4">
-            <p className="mr-2 text-lg font-semibold">Status:</p>
-            <p className="text-base">{approvalStatus}</p>
-          </div>
-          <div className="mb-4">
-            <button
-              className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 transition-colors duration-300 mr-2"
-              onClick={handleApprove}
-            >
-              Approve
-            </button>
-            <button
-              className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 transition-colors duration-300"
-              onClick={handleDecline}
-            >
-              Decline
-            </button>
+            <div>
+              <span
+                className={`inline-block px-2 py-1 rounded ${
+                  course.status === "PENDING"
+                    ? "bg-yellow-500 text-white"
+                    : course.status === "APPROVED"
+                    ? "bg-green-500 text-white"
+                    : course.status === "DECLINED"
+                    ? "bg-red-500 text-white"
+                    : ""
+                }`}
+              >
+                Course is still {course.status}
+              </span>
+            </div>
           </div>
         </div>
       ) : (

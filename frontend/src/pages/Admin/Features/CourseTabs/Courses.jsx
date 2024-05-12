@@ -83,35 +83,50 @@ const Courses = ({ handleTabChange, setSelectedCourse }) => {
         <LoadingSpinner />
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full shadow-md rounded-xl">
             <thead>
-              <tr>
+              <tr className="">
                 <th className="p-3 text-left">Image</th>
-
                 <th className="p-3 text-left">Title</th>
                 <th className="p-3 text-left">Category ID</th>
                 <th className="p-3 text-left">Level</th>
                 <th className="p-3 text-left">Price</th>
-
+                <th className="p-3 text-left">Status</th>{" "}
+                {/* Add status header */}
                 <th className="p-3 text-center">Action</th>
               </tr>
             </thead>
             <tbody>
               {displayedCourses.map((course) => (
-                <tr key={course.id} className="border-t">
+                <tr key={course.id} className="border-t hover:bg-gray-100">
                   <td className="p-3">
                     <img
                       src={course.coverImgUrl}
                       alt={course.courseName}
-                      className="w-24 h-16"
+                      className="w-24 h-16 object-cover"
                     />
                   </td>
                   <td className="p-3">{course.courseName}</td>
                   <td className="p-3">{course.categoryId}</td>
                   <td className="p-3">{course.level}</td>
                   <td className="p-3">$ {course.price}</td>
+                  <td className="p-3">
+                    <span
+                      className={`inline-block px-2 py-1 rounded ${
+                        course.status === "PENDING"
+                          ? "bg-yellow-500 text-white"
+                          : course.status === "APPROVED"
+                          ? "bg-green-500 text-white"
+                          : course.status === "DECLINED"
+                          ? "bg-red-500 text-white"
+                          : ""
+                      }`}
+                    >
+                      {course.status}
+                    </span>
+                  </td>
 
-                  <td className="p-3 flex justify-center">
+                  <td className="p-3">
                     <button
                       className="bg-blue-500 text-white px-4 py-1 rounded"
                       onClick={() => handleViewDetails(course)}

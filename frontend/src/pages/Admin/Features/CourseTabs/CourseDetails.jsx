@@ -1,42 +1,66 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../../../api/axios"; // Import axios for API requests
+import {
+  ErrorNotification,
+  SuccessNotification,
+} from "../../../../notifications/notifications";
+import LoadingSpinner from "../../../../components/LoadingSpinner/LoadingSpinner";
 
 const CourseDetails = ({ course }) => {
-  const [approvalStatus, setApprovalStatus] = useState("Pending");
   const [modules, setModules] = useState([]); // State to store modules data
+  const [loading, setLoading] = useState(false); // State to track loading status
+  const [approvalStatus, setApprovalStatus] = useState(course.status);
 
   // Function to fetch modules for the selected course
   useEffect(() => {
     // Check if course is provided
     if (course) {
       const fetchModules = async () => {
+        setLoading(true); // Set loading to true when fetching data
         try {
           const response = await axios.get(`module-controller/${course.id}`);
           setModules(response.data); // Set modules data from the response
         } catch (error) {
           console.error("Error fetching modules:", error);
           // Handle error, show error notification, etc.
+        } finally {
+          setLoading(false); // Set loading to false when data fetching is complete
         }
       };
 
       fetchModules();
     }
-  }, [course]); // Fetch modules whenever the course ID changes
+  }, [course, approvalStatus]); // Fetch modules whenever the course ID changes
 
-  const handleApprove = () => {
-    // Logic to approve the course (you can implement your own approval mechanism here)
-    setApprovalStatus("Approved");
+  const handleApprove = async () => {
+    try {
+      // Send a POST request to update course status to "APPROVED"
+      await axios.put(`course-controller/approve/${course.id}`);
+      SuccessNotification("Course Approved");
+      setApprovalStatus("APPROVED");
+    } catch (error) {
+      console.error("Error approving course:", error);
+      // Handle error, show error notification, etc.
+    }
   };
 
-  const handleDecline = () => {
-    // Logic to decline the course
-    setApprovalStatus("Declined");
+  const handleDecline = async () => {
+    try {
+      // Send a POST request to update course status to "DECLINED"
+      await axios.put(`course-controller/decline/${course.id}`);
+      SuccessNotification("Course Declined");
+      setApprovalStatus("DECLINED");
+    } catch (error) {
+      console.error("Error declining course:", error);
+    }
   };
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-xl font-semibold mb-4">Course Details</h2>
-      {course ? (
+      {loading ? ( // Display loading spinner if data is being fetched
+        <LoadingSpinner />
+      ) : course ? (
         <div>
           <div className="mb-4">
             <img
@@ -89,22 +113,37 @@ const CourseDetails = ({ course }) => {
             </ul>
           </div>
           <div className="mb-4">
-            <p className="mr-2 text-lg font-semibold">Status:</p>
-            <p className="text-base">{approvalStatus}</p>
+            <span
+              className={`inline-block px-2 py-1 rounded ${
+                approvalStatus === "PENDING"
+                  ? "bg-yellow-500 text-white"
+                  : approvalStatus === "APPROVED"
+                  ? "bg-green-500 text-white"
+                  : approvalStatus === "DECLINED"
+                  ? "bg-red-500 text-white"
+                  : ""
+              }`}
+            >
+              Course is currently in {approvalStatus}
+            </span>
           </div>
           <div className="mb-4">
-            <button
-              className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 transition-colors duration-300 mr-2"
-              onClick={handleApprove}
-            >
-              Approve
-            </button>
-            <button
-              className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 transition-colors duration-300"
-              onClick={handleDecline}
-            >
-              Decline
-            </button>
+            {approvalStatus === "PENDING" && (
+              <button
+                className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 transition-colors duration-300 mr-2"
+                onClick={handleApprove}
+              >
+                Approve
+              </button>
+            )}
+            {approvalStatus === "PENDING" && (
+              <button
+                className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 transition-colors duration-300"
+                onClick={handleDecline}
+              >
+                Decline
+              </button>
+            )}
           </div>
         </div>
       ) : (
