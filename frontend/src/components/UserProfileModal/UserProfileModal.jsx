@@ -60,7 +60,6 @@ const UserProfileModal = ({ onClose, logout }) => {
     try {
       const response = await axios.put(`users/${user.userId}`, {
         userName: name,
-        email,
         contactNo: mobile,
       });
       console.log("User updated successfully:", response.data);
