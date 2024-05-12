@@ -20,7 +20,9 @@ const ModuleDetails = ({ module }) => {
         onClick={toggleAccordion}
         className="flex justify-between items-center w-full p-4 text-lg font-medium text-left focus:outline-none"
       >
-        <span className="md:text-lg text-sm">{module.title}</span>
+        <span className="md:text-lg text-sm">
+          {module.moduleName} - {module.moduleCode}
+        </span>
         <svg
           className={`w-6 h-6 transition-transform duration-300 transform ${
             isOpen ? "rotate-90" : ""
@@ -42,38 +44,38 @@ const ModuleDetails = ({ module }) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <h3 className="text-lg font-medium">Videos</h3>
-              <ul className="mt-2 space-y-1">
-                {module.videos.map((video, index) => (
+              {/* <ul className="mt-2 space-y-1">
+                {module.videoDTOList.map((video, index) => (
                   <li key={index}>
                     <a href={video.link} className="hover:underline">
                       {video.title} ({video.duration})
                     </a>
                   </li>
                 ))}
-              </ul>
+              </ul> */}
             </div>
             <div>
               <h3 className="text-lg font-medium">Readings</h3>
               <ul className="mt-2 space-y-1">
-                {module.readings.map((reading, index) => (
+                {/* {module.readingDTOList.map((reading, index) => (
                   <li key={index}>
                     <span>
                       {reading.title} ({reading.duration})
                     </span>
                   </li>
-                ))}
+                ))} */}
               </ul>
             </div>
             <div>
               <h3 className="text-lg font-medium">Quizzes</h3>
               <ul className="mt-2 space-y-1">
-                {module.quizzes.map((quiz, index) => (
+                {/* {module.quizDTO.map((quiz, index) => (
                   <li key={index}>
                     <span>
                       {quiz.title} ({quiz.duration})
                     </span>
                   </li>
-                ))}
+                ))} */}
               </ul>
             </div>
           </div>

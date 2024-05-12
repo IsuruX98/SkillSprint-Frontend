@@ -13,6 +13,8 @@ const CourseDetail = () => {
   const [incomingCourse, setIncomingCourse] = useState(location.state.course);
   const [course, setCourse] = useState(null); // Rename state to 'course'
 
+  console.log(course);
+
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
@@ -59,7 +61,7 @@ const CourseDetail = () => {
 
             <div className="flex flex-col gap-2 mb-4">
               <div className="flex items-center">
-                <p className="text-gray-700 mr-2">5</p>
+                <p className="text-gray-700 mr-2">5.2</p>
                 <p className="text-gray-700 mr-2">2563 ratings</p>
                 <BsFillStarFill className="text-yellow-500 mr-1" />
                 <BsFillStarFill className="text-yellow-500 mr-1" />
@@ -67,7 +69,7 @@ const CourseDetail = () => {
                 <BsFillStarFill className="text-yellow-500 mr-1" />
               </div>
               <div className="flex items-center">
-                <FaUserAlt className="text-gray-700 mr-1" />
+                <FaUserAlt className="text-gray-700 mr-2" />
                 <p className="text-gray-700">{course.level}</p>
               </div>
               <div className="flex items-center">

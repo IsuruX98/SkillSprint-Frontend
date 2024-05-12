@@ -11,9 +11,11 @@ export const AuthProvider = ({ children }) => {
   const [authLoading, setAuthLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  console.log(user);
+
   const fetchUserById = async (userId) => {
     try {
-      const response = await axios.get(`users/${userId}`);
+      const response = await axios.get(`users/getUser/${userId}`);
       const userData = response.data;
       setUser(userData);
     } catch (error) {
@@ -35,7 +37,7 @@ export const AuthProvider = ({ children }) => {
     } else {
       setAuthLoading(false); // If user is not logged in, set loading to false
     }
-  });
+  }, []);
 
   const login = async (formData) => {
     try {
