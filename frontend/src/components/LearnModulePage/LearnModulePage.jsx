@@ -1,15 +1,45 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "../../context/authContext";
+import {
+  ErrorNotification,
+  SuccessNotification,
+} from "../../notifications/notifications";
+import axios from "../../api/axios";
+
+const ReadingComponent = ({ reading }) => {
+  return (
+    <div className="mb-4">
+      <div className="flex justify-between items-center mb-8">
+        <h3 className="text-lg font-medium">{reading.title}</h3>
+        <p className=" text-gray-500">Duration: {reading.duration} mins</p>
+      </div>
+
+      <div className="flex justify-center mb-8">
+        <div
+          className="prose"
+          dangerouslySetInnerHTML={{ __html: reading.description }}
+        ></div>
+      </div>
+    </div>
+  );
+};
 
 const LearnModulePage = () => {
   const location = useLocation();
   const { module } = location.state;
 
-  console.log("module", module);
+  const { user } = useAuth();
+
+  const userId = user && user.userId;
+  const quizId = module && module.quizDTO.id;
+
+  console.log("user module", module);
 
   const [openSection, setOpenSection] = useState("");
   const [quizModalOpen, setQuizModalOpen] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [answers, setAnswers] = useState([]);
 
   const toggleSection = (section) => {
     setOpenSection(openSection === section ? "" : section);
@@ -20,37 +50,67 @@ const LearnModulePage = () => {
   };
 
   const markComplete = (sectionTitle) => {
-    // Implement logic to mark section as completed
     alert(`Section "${sectionTitle}" marked as completed!`);
   };
 
   const openQuizModal = () => {
     setQuizModalOpen(true);
-    setCurrentQuestion(0); // Reset current question index when opening the modal
+    setCurrentQuestionIndex(0);
+    setAnswers([]);
   };
 
   const closeQuizModal = () => {
     setQuizModalOpen(false);
   };
 
+  const handleAnswer = (optionIndex) => {
+    const updatedAnswers = [...answers];
+    updatedAnswers[currentQuestionIndex] = optionIndex;
+    setAnswers(updatedAnswers);
+  };
+
   const handleNextQuestion = () => {
-    if (currentQuestion < module.quizzes[0].quiz.questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
+    setCurrentQuestionIndex(currentQuestionIndex + 1);
+  };
+
+  const handlePreviousQuestion = () => {
+    setCurrentQuestionIndex(currentQuestionIndex - 1);
+  };
+
+  const handleFinishQuiz = async () => {
+    try {
+      // Increment each answer value by 1
+      const incrementedAnswers = answers.map((answer) => answer + 1);
+
+      // Make the POST request to submit quiz answers using Axios
+      const response = await axios.post("score/", {
+        userId: userId,
+        quizId: quizId,
+        answers: incrementedAnswers,
+      });
+
+      // Extract score from response data
+      const score = response.data.score;
+
+      // Display the score in an alert
+      SuccessNotification(`Your score: ${score}`);
+
+      // Close the quiz modal
+      closeQuizModal();
+    } catch (error) {
+      console.error("Error submitting quiz:", error);
+      // Handle error as needed
     }
   };
 
-  const handleFinishQuiz = () => {
-    // Implement logic to handle finishing the quiz
-    alert("Quiz completed!");
-    closeQuizModal();
-  };
-
-  // Helper function to convert duration from seconds to minutes and seconds format
   const formatDuration = (durationInSeconds) => {
     const minutes = Math.floor(durationInSeconds / 60);
     const seconds = Math.round(durationInSeconds % 60);
     return `${minutes} min ${seconds} sec`;
   };
+
+  const isLastQuestion =
+    currentQuestionIndex === module.quizDTO.questions.length - 1;
 
   return (
     <div className="min-h-screen lg:px-32 lg:py-12 px-12 py-12">
@@ -90,12 +150,6 @@ const LearnModulePage = () => {
             onClick={() => toggleSection("videos")}
           >
             <h2 className="text-xl font-semibold">Videos</h2>
-            <button
-              className="bg-blue-500 text-white px-3 py-1 rounded"
-              onClick={() => markComplete("Videos")}
-            >
-              Complete
-            </button>
           </div>
           {isSectionOpen("videos") && (
             <div className="p-4 bg-gray-100">
@@ -124,25 +178,11 @@ const LearnModulePage = () => {
             onClick={() => toggleSection("readings")}
           >
             <h2 className="text-xl font-semibold">Readings</h2>
-            <button
-              className="bg-blue-500 text-white px-3 py-1 rounded"
-              onClick={() => markComplete("Readings")}
-            >
-              Complete
-            </button>
           </div>
           {isSectionOpen("readings") && (
             <div className="p-4 bg-gray-100">
               {module.readingDTOList.map((reading, index) => (
-                <div key={index} className="mb-4">
-                  <h3 className="text-lg font-medium mb-1">{reading.title}</h3>
-                  <div
-                    dangerouslySetInnerHTML={{ __html: reading.description }}
-                  ></div>
-                  <p className="text-sm mt-4 text-gray-500">
-                    Duration: {reading.duration} mins
-                  </p>
-                </div>
+                <ReadingComponent key={index} reading={reading} />
               ))}
             </div>
           )}
@@ -154,32 +194,24 @@ const LearnModulePage = () => {
             onClick={() => toggleSection("quizzes")}
           >
             <h2 className="text-xl font-semibold">Quizzes</h2>
-            <button
-              className="bg-blue-500 text-white px-3 py-1 rounded"
-              onClick={() => markComplete("Quizzes")}
-            >
-              Complete
-            </button>
           </div>
           {isSectionOpen("quizzes") && (
             <div className="p-4 bg-gray-100">
-              {module.quizzes.map((quiz, index) => (
-                <div key={index} className="mb-4">
-                  <h3 className="text-lg font-medium mb-1">{quiz.title}</h3>
-                  <p className="text-gray-600">{quiz.description}</p>
-                  <p className="text-sm text-gray-500">
-                    Duration: {quiz.duration}
-                  </p>
-                  <div className="flex items-center mt-5">
-                    <button
-                      className="bg-green-500 text-white px-3 py-1 rounded"
-                      onClick={openQuizModal}
-                    >
-                      Take Quiz
-                    </button>
-                  </div>
+              <div className="mb-4">
+                <h3 className="text-lg font-medium mb-1">
+                  {module.quizDTO.title}
+                </h3>
+                <p className="text-gray-600">{module.quizDTO.description}</p>
+                <p className="text-sm text-gray-500">Duration: 30 mins</p>
+                <div className="flex items-center mt-6">
+                  <button
+                    className="bg-green-500 text-white px-3 py-1 rounded"
+                    onClick={openQuizModal}
+                  >
+                    Take Quiz
+                  </button>
                 </div>
-              ))}
+              </div>
             </div>
           )}
         </div>
@@ -189,50 +221,55 @@ const LearnModulePage = () => {
       {quizModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-[1000]">
           <div className="bg-white p-4 rounded-lg mx-10">
-            <h2 className="text-xl font-semibold mb-4">OOP Quiz</h2>
-            <p className="text-gray-600">{module.quizzes[0].description}</p>
-            <p className="text-sm text-gray-500">
-              Duration: {module.quizzes[0].duration}
-            </p>
+            <h2 className="text-xl font-semibold mb-4">
+              {module.quizDTO.questions[currentQuestionIndex].question}
+            </h2>
             <div className="mt-4">
-              {/* Show one question at a time based on currentQuestion index */}
-              <div className="mb-2">
-                <p className="font-semibold mb-5">
-                  {module.quizzes[0].quiz.questions[currentQuestion].question}
-                </p>
-                <div className="ml-4">
-                  {module.quizzes[0].quiz.questions[
-                    currentQuestion
-                  ].options.map((option, idx) => (
-                    <label key={idx} className="block mb-1">
+              {module.quizDTO.questions[currentQuestionIndex].options.map(
+                (option, optionIndex) => (
+                  <div key={optionIndex} className="mb-2">
+                    <label className="flex items-center">
                       <input
                         type="radio"
-                        name={`question${currentQuestion}`}
-                        value={option}
-                        className="mr-2"
+                        name="answer"
+                        value={optionIndex}
+                        checked={answers[currentQuestionIndex] === optionIndex}
+                        onChange={() => handleAnswer(optionIndex)}
                       />
-                      {option}
+                      <span className="ml-2">{option}</span>
                     </label>
-                  ))}
-                </div>
-              </div>
+                  </div>
+                )
+              )}
             </div>
-            <div className="mt-4 flex justify-end">
-              {currentQuestion < module.quizzes[0].quiz.questions.length - 1 ? (
+            <div className="mt-4 flex justify-between">
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+                onClick={handlePreviousQuestion}
+                disabled={currentQuestionIndex === 0}
+              >
+                Previous
+              </button>
+              {isLastQuestion ? (
                 <button
-                  className="bg-blue-500 text-white px-3 py-1 rounded mr-2"
-                  onClick={handleNextQuestion}
-                >
-                  Next
-                </button>
-              ) : (
-                <button
-                  className="bg-green-500 text-white px-3 py-1 rounded mr-2"
+                  className="bg-green-500 text-white px-4 py-2 rounded"
                   onClick={handleFinishQuiz}
                 >
                   Finish
                 </button>
+              ) : (
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  onClick={handleNextQuestion}
+                  disabled={
+                    currentQuestionIndex === module.quizDTO.questions.length - 1
+                  }
+                >
+                  Next
+                </button>
               )}
+            </div>
+            <div className="mt-4 flex justify-end">
               <button
                 className="bg-red-500 text-white px-3 py-1 rounded"
                 onClick={closeQuizModal}
