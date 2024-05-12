@@ -19,14 +19,12 @@ const CourseDetail = () => {
   const [incomingCourse, setIncomingCourse] = useState(location.state.course);
   const [course, setCourse] = useState(null);
   const [progress, setProgress] = useState(44);
-  const [enrolledCourses, setEnrolledCourses] = useState([
-    "66408230e885811075ea61e11",
-    "courseId2",
-    "courseId3",
-  ]);
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [showPayment, setShowPayment] = useState(false);
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+
+  console.log("enrolledCourses", enrolledCourses);
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -53,7 +51,7 @@ const CourseDetail = () => {
   useEffect(() => {
     const fetchEnrolledCourses = async () => {
       try {
-        const response = await axios.get("endpoint-for-enrolled-courses");
+        const response = await axios.get("course-enrollment/user-courses");
         const enrolledCoursesData = await response.data;
         setEnrolledCourses(enrolledCoursesData);
       } catch (error) {
@@ -71,15 +69,27 @@ const CourseDetail = () => {
   const handlePaymentSuccess = () => {
     setPaymentSuccess(true);
     setIsEnrolled(true);
-    SuccessNotification("Enrolled Successfully");
   };
 
   // Run the logic when payment success and enrollment are true
   useEffect(() => {
-    if (paymentSuccess && isEnrolled) {
-      // Perform actions after successful enrollment and payment
-      console.log("Enrollment and Payment Success!");
-    }
+    const enrollUser = async () => {
+      try {
+        if (paymentSuccess && isEnrolled) {
+          // Perform enrollment
+          const response = await axios.post(
+            `course-enrollment/${course.id}?courseName=${course.courseName}`
+          );
+          // Handle enrollment success
+          SuccessNotification("Enrollment Successful");
+        }
+      } catch (error) {
+        console.error("Error enrolling user:", error);
+        ErrorNotification("Enrollment Failed");
+      }
+    };
+
+    enrollUser();
   }, [paymentSuccess, isEnrolled]);
 
   if (loading) {
