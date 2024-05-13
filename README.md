@@ -1,39 +1,51 @@
 # SkillSprint Frontend
 
-SkillSprint Frontend is a repository dedicated to the frontend aspect of the SkillSprint educational platform. It utilizes React for building user interfaces, Tailwind CSS for styling.
+Welcome to the SkillSprint frontend repository! This repository contains the frontend codebase for SkillSprint, an interactive platform designed to enhance skills through engaging courses. The frontend is built using React and styled using Tailwind CSS.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+To begin working on the SkillSprint frontend, follow these steps:
 
-### Prerequisites
-
-Before you begin, ensure you have met the following requirements:
-* [Node.js](https://nodejs.org/) installed on your machine.
-
-### Installation
-
-1. Clone the repository:
-   ```sh
-   git clone <https://github.com/IsuruX98/SkillSprint-Frontend.git>
+1. **Clone the Repository**: 
+   ```bash
+   git clone https://github.com/IsuruX98/SkillSprint-Frontend.git
    ```
-2. Navigate to the project directory:
-   ```sh
-   cd SkillSprint-Frontend
+
+2. **Navigate to the Project Directory**:
+   ```bash
+   cd SkillSprint-frontend
    ```
-3. Install dependencies:
-   ```sh
+
+3. **Install Dependencies**:
+   ```bash
    npm install
    ```
 
-## Usage
-
-1. Start the development server:
-   ```sh
+4. **Start the Development Server**:
+   ```bash
    npm start
    ```
-2. Open your browser and navigate to `http://localhost:3000` to access the SkillSprint web interface.
 
-## Accessing the Web Interface
+   This command will start the development server and automatically open the application in your default web browser.
 
-You can also access the SkillSprint web interface deployed on Vercel. Visit [SkillSprint on Vercel](#) to view the live version.
+## Building for Production
+
+To build the SkillSprint frontend for production use, run the following command:
+
+```bash
+npm run build
+```
+
+This will generate an optimized production build of the application in the `build` directory.
+
+## Screenshots
+
+![Screenshot_26-4-2024_142931_localhost](https://github.com/IsuruX98/SkillSprint-Frontend/assets/104721314/6a442e8a-900c-4c11-a186-d8816cde236e)
+
+
+## Contributers
+
+1. Isuru Madusanka
+2. Yasiru Deshan
+3. Chamith Kavinda
+4. Sehan Arandara
