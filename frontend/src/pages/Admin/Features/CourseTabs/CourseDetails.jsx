@@ -9,7 +9,9 @@ import LoadingSpinner from "../../../../components/LoadingSpinner/LoadingSpinner
 const CourseDetails = ({ course }) => {
   const [modules, setModules] = useState([]); // State to store modules data
   const [loading, setLoading] = useState(false); // State to track loading status
-  const [approvalStatus, setApprovalStatus] = useState(course.status);
+  const [approvalStatus, setApprovalStatus] = useState(
+    course ? course.status : null
+  );
 
   // Function to fetch modules for the selected course
   useEffect(() => {
@@ -54,6 +56,14 @@ const CourseDetails = ({ course }) => {
       console.error("Error declining course:", error);
     }
   };
+
+  if (!course) {
+    return (
+      <div>
+        <p className="text-gray-500">Please select a course to view details.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">

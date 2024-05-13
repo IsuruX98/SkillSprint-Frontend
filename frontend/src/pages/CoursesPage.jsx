@@ -57,7 +57,7 @@ const CoursesPage = () => {
             <p className="mt-2">Explore our range of courses</p>
           </div>
           <div className="lg:px-32 px-12 pb-12">
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 gap-4">
               {currentCourses.map((course) => (
                 <div
                   key={course.id}

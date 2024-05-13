@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const ModuleDetails = ({ module, index }) => {
+const ModuleDetails = ({ module, index, isEnrolled }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -94,12 +94,14 @@ const ModuleDetails = ({ module, index }) => {
               </ul>
             </div>
           </div>
-          <button
-            onClick={navigateToLearnModule}
-            className="mt-5 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md block md:w-auto w-full"
-          >
-            Learn Module
-          </button>
+          {isEnrolled && (
+            <button
+              onClick={navigateToLearnModule}
+              className="mt-5 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md block md:w-auto w-full"
+            >
+              Learn Module
+            </button>
+          )}
         </div>
       )}
     </div>

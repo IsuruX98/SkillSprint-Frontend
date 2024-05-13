@@ -7,13 +7,14 @@ import {
 } from "../../notifications/notifications";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import Pagination from "../Pagination/Pagination";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 import axios from "../../api/axios";
 
 const UserProfileModal = ({ onClose, logout }) => {
   const { user } = useAuth();
   console.log(user.username);
+  const navigate = useNavigate();
   const [editable, setEditable] = useState(false);
   const [name, setName] = useState(user.user_Name || "");
   const [email, setEmail] = useState(user.email || "");
@@ -29,25 +30,29 @@ const UserProfileModal = ({ onClose, logout }) => {
   const isAdmin = location.pathname === "/admin"; // Check if the current path is '/admin'
   const isInstructor = location.pathname === "/instructor"; // Check if the current path is '/instructor'
 
+  console.log("enrolledCourses", enrolledCourses);
+
   useEffect(() => {
     // Fetch enrolled courses when the component mounts
-    // Dummy data, no actual API call
     fetchEnrolledCourses();
   }, []);
 
-  // Dummy fetchEnrolledCourses function
+  // Fetch enrolled courses from API
   const fetchEnrolledCourses = async () => {
-    // Dummy array of enrolled courses (replace with actual API call)
-    const dummyCourses = [
-      { id: 1, name: "HTML Fundamentals" },
-      { id: 2, name: "CSS Basics" },
-      { id: 3, name: "JavaScript Essentials" },
-      { id: 4, name: "Responsive Web Design" },
-      { id: 5, name: "Introduction to Web Development" },
-      { id: 6, name: "Web Development for Beginners" },
-      { id: 7, name: "Introduction to Frontend Development" },
-    ];
-    setEnrolledCourses(dummyCourses);
+    try {
+      const response = await axios.get("course-enrollment/user-courses");
+      const courseIds = response.data.map((enrollment) => enrollment.courseId);
+      const coursesData = await Promise.all(
+        courseIds.map((courseId) =>
+          axios.get(`course-controller/all-courses/${courseId}`)
+        )
+      );
+      const enrolledCourses = coursesData.map((course) => course.data);
+      setEnrolledCourses(enrolledCourses);
+    } catch (error) {
+      console.error("Error fetching enrolled courses:", error);
+      // Handle error fetching enrolled courses
+    }
   };
 
   const handleUpdate = async () => {
@@ -133,6 +138,11 @@ const UserProfileModal = ({ onClose, logout }) => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const handleDetailsNavigation = (course) => {
+    navigate("/details", { state: { course } });
+    onClose();
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-8 rounded-lg w-96">
@@ -209,10 +219,10 @@ const UserProfileModal = ({ onClose, logout }) => {
                       key={course.id}
                       className="flex items-center justify-between mb-2"
                     >
-                      <span>{course.name}</span>
+                      <span>{course.courseName}</span>
                       <button
                         className="text-blue-500 underline cursor-pointer"
-                        onClick={() => console.log(`View ${course.name}`)}
+                        onClick={() => handleDetailsNavigation(course)}
                       >
                         View
                       </button>

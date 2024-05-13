@@ -225,17 +225,6 @@ const Navbar = () => {
               <AiOutlineUser />
               {user.user_Name}
             </button>
-            <button
-              className="relative flex items-center justify-center text-black"
-              onClick={() => setShowNotificationModal(true)}
-            >
-              <AiOutlineBell size={24} />
-              {notifications.length > 0 && (
-                <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-2 py-1 text-xs">
-                  {notifications.length}
-                </span>
-              )}
-            </button>
           </>
         ) : (
           <>

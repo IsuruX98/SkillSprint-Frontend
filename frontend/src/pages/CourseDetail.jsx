@@ -27,6 +27,13 @@ const CourseDetail = () => {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [enrollmentId, setEnrollmentId] = useState(null);
 
+  console.log("incomingCourse", incomingCourse);
+
+  // Update incomingCourse whenever a new course is received
+  useEffect(() => {
+    setIncomingCourse(location.state.course);
+  }, [location.state.course]);
+
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
@@ -42,10 +49,10 @@ const CourseDetail = () => {
     };
 
     fetchCourseData();
-  }, [incomingCourse.id]);
+  }, [incomingCourse]);
 
   useEffect(() => {
-    if (user && incomingCourse) {
+    if (user && incomingCourse && isEnrolled) {
       const fetchProgressData = async () => {
         try {
           const response = await axios.get(
@@ -63,7 +70,7 @@ const CourseDetail = () => {
 
       fetchProgressData();
     }
-  }, []);
+  }, [user, incomingCourse, isEnrolled]);
 
   useEffect(() => {
     // Check if the current course ID is present in enrolledCourses
@@ -276,20 +283,22 @@ const CourseDetail = () => {
                 </li>
               </ul>
             </div>
-            <div className="mb-6">
-              <h2 className="text-xl font-semibold mb-4">Course Progress</h2>
-              <div className="relative bg-gray-300 h-8 w-full rounded-lg overflow-hidden">
-                {/* Progress Bar */}
-                <div
-                  className="absolute top-0 left-0 bg-blue-500 h-full rounded-lg transition-all"
-                  style={{ width: `${progress}%` }} // Example: 50% completion
-                ></div>
-                {/* Insights on Hover */}
-                <div className="absolute top-0 left-0 h-full w-full flex items-center justify-center text-white text-sm font-bold transition-opacity">
-                  {progress}% Completed
+            {isEnrolled && (
+              <div className="mb-6">
+                <h2 className="text-xl font-semibold mb-4">Course Progress</h2>
+                <div className="relative bg-gray-300 h-8 w-full rounded-lg overflow-hidden">
+                  {/* Progress Bar */}
+                  <div
+                    className="absolute top-0 left-0 bg-blue-500 h-full rounded-lg transition-all"
+                    style={{ width: `${progress}%` }} // Example: 50% completion
+                  ></div>
+                  {/* Insights on Hover */}
+                  <div className="absolute top-0 left-0 h-full w-full flex items-center justify-center text-white text-sm font-bold transition-opacity">
+                    {progress}% Completed
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
@@ -297,7 +306,12 @@ const CourseDetail = () => {
           <h2 className="text-xl font-semibold mb-4">Modules</h2>
           {course.moduleResponseDTOList ? (
             course.moduleResponseDTOList.map((module, index) => (
-              <ModuleDetails key={module.id} module={module} index={index} />
+              <ModuleDetails
+                key={module.id}
+                module={module}
+                index={index}
+                isEnrolled={isEnrolled}
+              />
             ))
           ) : (
             <p>No modules available for this course.</p>
