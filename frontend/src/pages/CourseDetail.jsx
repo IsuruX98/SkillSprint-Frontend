@@ -11,6 +11,8 @@ import {
   ErrorNotification,
   SuccessNotification,
 } from "../notifications/notifications";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 const CourseDetail = () => {
   const { user } = useAuth();
@@ -23,7 +25,7 @@ const CourseDetail = () => {
   const [showPayment, setShowPayment] = useState(false);
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const [enrollmentId, setEnrollmentId] = useState(null); // Added state to hold the enrollment ID
+  const [enrollmentId, setEnrollmentId] = useState(null);
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -40,7 +42,7 @@ const CourseDetail = () => {
     };
 
     fetchCourseData();
-  });
+  }, [incomingCourse.id]);
 
   useEffect(() => {
     if (user && incomingCourse) {
@@ -61,14 +63,14 @@ const CourseDetail = () => {
 
       fetchProgressData();
     }
-  });
+  }, []);
 
   useEffect(() => {
     // Check if the current course ID is present in enrolledCourses
     setIsEnrolled(
       enrolledCourses.some((course) => course.courseId === incomingCourse.id)
     );
-  });
+  }, [enrolledCourses, incomingCourse.id]);
 
   useEffect(() => {
     const fetchEnrolledCourses = async () => {
@@ -171,6 +173,25 @@ const CourseDetail = () => {
     return <LoadingSpinner />;
   }
 
+  const confirmUnenroll = () => {
+    confirmAlert({
+      title: "Confirm Unenrollment",
+      message: "Are you sure you want to unenroll from this course?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => handleUnenroll(),
+        },
+        {
+          label: "No",
+          onClick: () => {
+            /* Do nothing on cancel */
+          },
+        },
+      ],
+    });
+  };
+
   return (
     <div className="py-8 bg-gray-100">
       <div className="lg:px-32 lg:py-12 px-12 py-12">
@@ -221,7 +242,7 @@ const CourseDetail = () => {
               <div className="mb-4">
                 <button
                   className={`w-full py-2 rounded-md text-white bg-red-500 hover:bg-red-600`}
-                  onClick={handleUnenroll}
+                  onClick={confirmUnenroll}
                 >
                   Unenroll
                 </button>

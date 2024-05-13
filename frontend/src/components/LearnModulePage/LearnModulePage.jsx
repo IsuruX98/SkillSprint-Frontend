@@ -216,7 +216,7 @@ const LearnModulePage = () => {
                   </div>
                 ))
               ) : (
-                <p>No videos available.</p>
+                <p className="p-4 text-gray-400">No videos available.</p>
               )}
             </div>
           )}
@@ -230,14 +230,16 @@ const LearnModulePage = () => {
           >
             <h2 className="text-xl font-semibold">Readings</h2>
           </div>
-          {isSectionOpen("readings") && module.readingDTOList.length > 0 ? (
+          {isSectionOpen("readings") && (
             <div className="p-4 bg-gray-100">
-              {module.readingDTOList.map((reading, index) => (
-                <ReadingComponent key={index} reading={reading} />
-              ))}
+              {module.readingDTOList ? (
+                module.readingDTOList.map((reading, index) => (
+                  <ReadingComponent key={index} reading={reading} />
+                ))
+              ) : (
+                <p className="p-4 text-gray-400">No readings available.</p>
+              )}
             </div>
-          ) : (
-            <p>No readings available.</p>
           )}
         </div>
         {/* Quizzes Section */}
@@ -248,27 +250,31 @@ const LearnModulePage = () => {
           >
             <h2 className="text-xl font-semibold">Quizzes</h2>
           </div>
-          {isSectionOpen("quizzes") && module.quizDTO ? (
-            <div className="p-4 bg-gray-100">
-              <div className="mb-4">
-                <h3 className="text-lg font-medium mb-1">
-                  {module.quizDTO.title}
-                </h3>
-                <p className="text-gray-600">{module.quizDTO.description}</p>
-                <p className="text-sm text-gray-500 mt-5">Duration: 30 mins</p>
-                <div className="flex items-center mt-6">
-                  <button
-                    className="bg-green-500 text-white px-3 py-1 rounded"
-                    onClick={openQuizModal}
-                  >
-                    Take Quiz
-                  </button>
+          {isSectionOpen("quizzes") ? (
+            module.quizDTO ? (
+              <div className="p-4 bg-gray-100">
+                <div className="mb-4">
+                  <h3 className="text-lg font-medium mb-1">
+                    {module.quizDTO.title}
+                  </h3>
+                  <p className="text-gray-600">{module.quizDTO.description}</p>
+                  <p className="text-sm text-gray-500 mt-5">
+                    Duration: 30 mins
+                  </p>
+                  <div className="flex items-center mt-6">
+                    <button
+                      className="bg-green-500 text-white px-3 py-1 rounded"
+                      onClick={openQuizModal}
+                    >
+                      Take Quiz
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ) : (
-            <p>No quizzes available.</p>
-          )}
+            ) : (
+              <p className="p-4 text-gray-400">No quiz available.</p>
+            )
+          ) : null}
         </div>
       </div>
 
