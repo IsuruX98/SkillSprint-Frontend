@@ -20,7 +20,8 @@ const CourseDetail = () => {
   const [loading, setLoading] = useState(true);
   const [incomingCourse, setIncomingCourse] = useState(location.state.course);
   const [course, setCourse] = useState(null);
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(null);
+  const [progressId, setProgressId] = useState(null);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [showPayment, setShowPayment] = useState(false);
   const [isEnrolled, setIsEnrolled] = useState(false);
@@ -28,6 +29,8 @@ const CourseDetail = () => {
   const [enrollmentId, setEnrollmentId] = useState(null);
 
   console.log("incomingCourse", incomingCourse);
+  console.log("progress", progressId && progressId.id);
+  console.log(user);
 
   // Update incomingCourse whenever a new course is received
   useEffect(() => {
@@ -52,7 +55,7 @@ const CourseDetail = () => {
   }, [incomingCourse]);
 
   useEffect(() => {
-    if (user && incomingCourse && isEnrolled) {
+    if (user && incomingCourse) {
       const fetchProgressData = async () => {
         try {
           const response = await axios.get(
@@ -60,6 +63,7 @@ const CourseDetail = () => {
           );
           const progressData = await response.data;
 
+          setProgressId(progressData);
           setProgress(progressData.percentage);
 
           console.log("Progress data:", progressData);
@@ -70,7 +74,7 @@ const CourseDetail = () => {
 
       fetchProgressData();
     }
-  }, [user, incomingCourse, isEnrolled]);
+  }, [user, incomingCourse]);
 
   useEffect(() => {
     // Check if the current course ID is present in enrolledCourses
@@ -112,9 +116,6 @@ const CourseDetail = () => {
         percentage: 0,
         isDone: Array(course.moduleResponseDTOList.length).fill(false),
       });
-
-      // Handle progress posting success
-      SuccessNotification("Enrollment Successful");
     } catch (error) {
       console.error("Error posting user progress:", error);
       ErrorNotification("Progress Tracking Failed");
@@ -146,8 +147,13 @@ const CourseDetail = () => {
     try {
       // Ensure that enrollmentId is not null before attempting to unenroll
       if (enrollmentId) {
+        // Unenroll the user
         await axios.delete(`course-enrollment/unenroll/${enrollmentId}`);
-        // After successful unenrollment, you may want to update the enrolledCourses state
+
+        // After successful unenrollment, delete the progress
+        await axios.delete(`progress/${progressId.id}`);
+
+        // After successful unenrollment, update the enrolledCourses state
         const updatedEnrolledCourses = enrolledCourses.filter(
           (course) => course.id !== enrollmentId
         );
@@ -234,7 +240,7 @@ const CourseDetail = () => {
               </div>
             </div>
 
-            {!isEnrolled && (
+            {!isEnrolled ? (
               <div className="mb-4">
                 <button
                   className={`w-full py-2 rounded-md text-white bg-blue-500 hover:bg-blue-600`}
@@ -243,9 +249,7 @@ const CourseDetail = () => {
                   Enroll Now
                 </button>
               </div>
-            )}
-
-            {isEnrolled && (
+            ) : (
               <div className="mb-4">
                 <button
                   className={`w-full py-2 rounded-md text-white bg-red-500 hover:bg-red-600`}

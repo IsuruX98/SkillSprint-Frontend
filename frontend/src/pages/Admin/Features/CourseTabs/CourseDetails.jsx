@@ -1,55 +1,117 @@
 import React, { useState, useEffect } from "react";
-import axios from "../../../../api/axios"; // Import axios for API requests
+import axios from "../../../../api/axios";
 import {
   ErrorNotification,
   SuccessNotification,
 } from "../../../../notifications/notifications";
 import LoadingSpinner from "../../../../components/LoadingSpinner/LoadingSpinner";
 
+const ModuleComponent = ({ module }) => {
+  return (
+    <div className="mb-8">
+      <h3 className="text-lg font-medium mb-2">{module.moduleName}</h3>
+      {/* Render videos */}
+      {module.videoDTOList &&
+        module.videoDTOList.map((video, index) => (
+          <div key={index} className="mb-4">
+            <h4 className="text-base font-semibold">{video.title}</h4>
+            <video controls className="w-full" key={video.title}>
+              <source src={video.url} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        ))}
+      {/* Render readings */}
+      {module.readingDTOList &&
+        module.readingDTOList.map((reading, index) => (
+          <div key={index} className="mb-4">
+            <h4 className="text-lg font-semibold my-5">{reading.title}</h4>
+            <div
+              className="prose"
+              dangerouslySetInnerHTML={{ __html: reading.description }}
+            ></div>
+          </div>
+        ))}
+      {/* Render quiz */}
+      {module.quizDTO && (
+        <div className="mb-4">
+          <h4 className="text-base font-semibold">{module.quizDTO.title}</h4>
+          <p className="text-sm text-gray-600">{module.quizDTO.description}</p>
+          <p className="text-sm text-gray-500 mt-5">Duration: 30 mins</p>
+          {/* Render questions */}
+          <div className="mt-4">
+            {module.quizDTO.questions.map((question, index) => (
+              <div key={index} className="mb-4">
+                <h5 className="text-base font-semibold">{question.question}</h5>
+                {/* Render options */}
+                {question.options.map((option, optionIndex) => (
+                  <div
+                    key={optionIndex}
+                    className={`ml-6 ${
+                      module.quizDTO.correctAnswers[index] - 1 === optionIndex
+                        ? "text-green-500"
+                        : ""
+                    }`}
+                  >
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name={`question_${index}`}
+                        value={optionIndex}
+                        checked={question.answer === optionIndex}
+                        disabled
+                      />
+                      <span className="ml-2">{option}</span>
+                    </label>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const CourseDetails = ({ course }) => {
-  const [modules, setModules] = useState([]); // State to store modules data
-  const [loading, setLoading] = useState(false); // State to track loading status
+  const [courseData, setCourseData] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [approvalStatus, setApprovalStatus] = useState(
     course ? course.status : null
   );
 
-  // Function to fetch modules for the selected course
   useEffect(() => {
-    // Check if course is provided
-    if (course) {
-      const fetchModules = async () => {
-        setLoading(true); // Set loading to true when fetching data
-        try {
-          const response = await axios.get(`module-controller/${course.id}`);
-          setModules(response.data); // Set modules data from the response
-        } catch (error) {
-          console.error("Error fetching modules:", error);
-          // Handle error, show error notification, etc.
-        } finally {
-          setLoading(false); // Set loading to false when data fetching is complete
-        }
-      };
+    const fetchCourseData = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          `course-controller/all-courses/${course.id}`
+        );
+        const data = await response.data;
+        setCourseData(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching course data:", error);
+      }
+    };
 
-      fetchModules();
-    }
-  }, [course, approvalStatus]); // Fetch modules whenever the course ID changes
+    fetchCourseData();
+  }, [course, approvalStatus]);
 
   const handleApprove = async () => {
     try {
-      // Send a POST request to update course status to "APPROVED"
-      await axios.put(`course-controller/approve/${course.id}`);
+      await axios.put(`course-controller/approve/${courseData.id}`);
       SuccessNotification("Course Approved");
       setApprovalStatus("APPROVED");
     } catch (error) {
       console.error("Error approving course:", error);
-      // Handle error, show error notification, etc.
     }
   };
 
   const handleDecline = async () => {
     try {
-      // Send a POST request to update course status to "DECLINED"
-      await axios.put(`course-controller/decline/${course.id}`);
+      await axios.put(`course-controller/decline/${courseData.id}`);
       SuccessNotification("Course Declined");
       setApprovalStatus("DECLINED");
     } catch (error) {
@@ -67,62 +129,54 @@ const CourseDetails = ({ course }) => {
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold mb-4">Course Details</h2>
-      {loading ? ( // Display loading spinner if data is being fetched
+      <h2 className="text-xl font-semibold mb-6">Course Details</h2>
+      {loading ? (
         <LoadingSpinner />
-      ) : course ? (
+      ) : courseData ? (
         <div>
-          <div className="mb-4">
+          <div className="mb-6">
             <img
-              src={course.coverImgUrl}
-              alt={course.courseName}
+              src={courseData.coverImgUrl}
+              alt={courseData.courseName}
               className="w-full h-auto rounded-lg"
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-6">
             <p className="text-lg font-semibold">Title:</p>
-            <p className="text-base">{course.courseName}</p>
+            <p className="text-base">{courseData.courseName}</p>
           </div>
           {/* Render modules */}
-          {modules ? (
-            <div className="mb-4">
-              <p className="text-lg font-semibold">Modules:</p>
-              <ul className="list-disc list-inside">
-                {modules.map((module) => (
-                  <li key={module.id} className="text-base">
-                    <strong>{module.moduleCode}:</strong> {module.moduleName}
-                  </li>
-                ))}
-              </ul>
-            </div>
+          {courseData.moduleResponseDTOList ? (
+            courseData.moduleResponseDTOList.map((module, index) => (
+              <ModuleComponent key={index} module={module} />
+            ))
           ) : (
-            <p className="text-gray-500 mb-4">No Modules for this course</p>
+            <p className="text-gray-500 mb-6">No Modules for this course</p>
           )}
-
           {/* Other course details */}
-          <div className="mb-4">
+          <div className="mb-6">
             <p className="text-lg font-semibold">Level:</p>
-            <p className="text-base">{course.level}</p>
+            <p className="text-base">{courseData.level}</p>
           </div>
-          <div className="mb-4">
+          <div className="mb-6">
             <p className="text-lg font-semibold">Price:</p>
-            <p className="text-base">${course.price}</p>
+            <p className="text-base">${courseData.price}</p>
           </div>
-          <div className="mb-4">
+          <div className="mb-6">
             <p className="text-lg font-semibold">Description:</p>
-            <p className="text-base">{course.description}</p>
+            <p className="text-base">{courseData.description}</p>
           </div>
-          <div className="mb-4">
+          <div className="mb-6">
             <p className="text-lg font-semibold">Skills Gained:</p>
             <ul className="list-disc list-inside">
-              {course.skillgained.map((skill, index) => (
+              {courseData.skillgained.map((skill, index) => (
                 <li key={index} className="text-base">
                   {skill}
                 </li>
               ))}
             </ul>
           </div>
-          <div className="mb-4">
+          <div className="mb-6">
             <span
               className={`inline-block px-2 py-1 rounded ${
                 approvalStatus === "PENDING"
@@ -134,13 +188,13 @@ const CourseDetails = ({ course }) => {
                   : ""
               }`}
             >
-              Course is currently in {approvalStatus}
+              Course is currently {approvalStatus}
             </span>
           </div>
-          <div className="mb-4">
+          <div className="mb-6">
             {approvalStatus === "PENDING" && (
               <button
-                className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 transition-colors duration-300 mr-2"
+                className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:bg-blue-600 transition-colors duration-300"
                 onClick={handleApprove}
               >
                 Approve
@@ -148,7 +202,7 @@ const CourseDetails = ({ course }) => {
             )}
             {approvalStatus === "PENDING" && (
               <button
-                className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 transition-colors duration-300"
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors duration-300"
                 onClick={handleDecline}
               >
                 Decline
