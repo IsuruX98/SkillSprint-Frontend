@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 import {
@@ -28,6 +28,7 @@ const ReadingComponent = ({ reading }) => {
 const LearnModulePage = () => {
   const location = useLocation();
   const { module, index } = location.state;
+  const [completeModule, setCompleteModule] = useState(false);
 
   console.log("index", index);
 
@@ -35,6 +36,7 @@ const LearnModulePage = () => {
 
   const userId = user && user.userId;
   const quizId = module && module.quizDTO.id;
+  const courseId = module && module.courseId;
 
   console.log("user module", module);
 
@@ -51,9 +53,31 @@ const LearnModulePage = () => {
     return openSection === section;
   };
 
-  const markComplete = (sectionTitle) => {
-    alert(`Section "${sectionTitle}" marked as completed!`);
-  };
+  useEffect(() => {
+    if (user && module) {
+      const fetchProgressData = async () => {
+        try {
+          const response = await axios.get(
+            `progress/${user.userId}/${module.courseId}`
+          );
+          const progressData = await response.data;
+
+          console.log("Progress data:", progressData);
+
+          console.log(progressData.isDone[index]);
+
+          // Check if the module is done
+          if (progressData.isDone[index]) {
+            setCompleteModule(true);
+          }
+        } catch (error) {
+          console.error("Error fetching progress data:", error);
+        }
+      };
+
+      fetchProgressData();
+    }
+  });
 
   const openQuizModal = () => {
     setQuizModalOpen(true);
@@ -94,6 +118,18 @@ const LearnModulePage = () => {
       // Extract score from response data
       const score = response.data.score;
 
+      console.log(score);
+
+      // Check if the score is above 80
+      if (score > 80) {
+        // If the score is above 80, post progress
+        const progressResponse = await axios.patch(
+          `progress/${userId}/${courseId}/${index}`
+        );
+        // Handle progress posting success
+        SuccessNotification("Progress Updated : you have completed the module");
+      }
+
       // Display the score in an alert
       SuccessNotification(`Your score: ${score}`);
 
@@ -102,6 +138,7 @@ const LearnModulePage = () => {
     } catch (error) {
       console.error("Error submitting quiz:", error);
       // Handle error as needed
+      ErrorNotification("Quiz Submission Failed");
     }
   };
 
@@ -118,6 +155,14 @@ const LearnModulePage = () => {
     <div className="min-h-screen lg:px-32 lg:py-12 px-12 py-12">
       <div>
         <h1 className="text-3xl font-bold mb-4">{module.moduleName}</h1>
+        {completeModule && (
+          <div className="mb-5">
+            <span className="px-4 py-1 text-white font-bold bg-green-500 rounded-xl">
+              Module completed
+            </span>
+          </div>
+        )}
+
         <p className="text-lg mb-10 mt-5 bg-gray-100 rounded-xl p-5">
           Welcome to the learning module! This module is designed to help you
           grasp the concepts effectively. Below are the instructions to maximize
@@ -155,20 +200,24 @@ const LearnModulePage = () => {
           </div>
           {isSectionOpen("videos") && (
             <div className="p-4 bg-gray-100">
-              {module.videoDTOList.map((video, index) => (
-                <div key={index} className="mb-4">
-                  <h3 className="text-lg font-medium mb-1">{video.title}</h3>
-                  <p className="text-sm text-gray-500 mt-4">
-                    Duration: {formatDuration(video.duration)}
-                  </p>
-                  <div className="mt-10">
-                    <video controls className="w-full" key={video.title}>
-                      <source src={video.url} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
+              {module.videoDTOList ? (
+                module.videoDTOList.map((video, index) => (
+                  <div key={index} className="mb-4">
+                    <h3 className="text-lg font-medium mb-1">{video.title}</h3>
+                    <p className="text-sm text-gray-500 mt-4">
+                      Duration: {formatDuration(video.duration)}
+                    </p>
+                    <div className="mt-10">
+                      <video controls className="w-full" key={video.title}>
+                        <source src={video.url} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p>No videos available.</p>
+              )}
             </div>
           )}
         </div>
@@ -181,12 +230,14 @@ const LearnModulePage = () => {
           >
             <h2 className="text-xl font-semibold">Readings</h2>
           </div>
-          {isSectionOpen("readings") && (
+          {isSectionOpen("readings") && module.readingDTOList.length > 0 ? (
             <div className="p-4 bg-gray-100">
               {module.readingDTOList.map((reading, index) => (
                 <ReadingComponent key={index} reading={reading} />
               ))}
             </div>
+          ) : (
+            <p>No readings available.</p>
           )}
         </div>
         {/* Quizzes Section */}
@@ -197,7 +248,7 @@ const LearnModulePage = () => {
           >
             <h2 className="text-xl font-semibold">Quizzes</h2>
           </div>
-          {isSectionOpen("quizzes") && (
+          {isSectionOpen("quizzes") && module.quizDTO ? (
             <div className="p-4 bg-gray-100">
               <div className="mb-4">
                 <h3 className="text-lg font-medium mb-1">
@@ -215,6 +266,8 @@ const LearnModulePage = () => {
                 </div>
               </div>
             </div>
+          ) : (
+            <p>No quizzes available.</p>
           )}
         </div>
       </div>

@@ -52,33 +52,45 @@ const ModuleDetails = ({ module, index }) => {
             <div>
               <h3 className="text-lg font-medium">Videos</h3>
               <ul className="mt-2 space-y-1">
-                {module.videoDTOList.map((video, index) => (
-                  <li key={index}>
-                    <a href={video.link} className="hover:underline">
-                      {video.title} ({formatDuration(video.duration)})
-                    </a>
-                  </li>
-                ))}
+                {module.videoDTOList ? (
+                  module.videoDTOList.map((video, index) => (
+                    <li key={index}>
+                      <a href={video.link} className="hover:underline">
+                        {video.title} ({formatDuration(video.duration)})
+                      </a>
+                    </li>
+                  ))
+                ) : (
+                  <p>No videos available.</p>
+                )}
               </ul>
             </div>
             <div>
               <h3 className="text-lg font-medium">Readings</h3>
               <ul className="mt-2 space-y-1">
-                {module.readingDTOList.map((reading, index) => (
-                  <li key={index}>
-                    <span>
-                      {reading.title} ({reading.duration} min)
-                    </span>
-                  </li>
-                ))}
+                {module.readingDTOList ? (
+                  module.readingDTOList.map((reading, index) => (
+                    <li key={index}>
+                      <span>
+                        {reading.title} ({reading.duration} min)
+                      </span>
+                    </li>
+                  ))
+                ) : (
+                  <p>No readings available.</p>
+                )}
               </ul>
             </div>
             <div>
               <h3 className="text-lg font-medium">Quizzes</h3>
               <ul className="mt-2 space-y-1">
-                <li>
-                  <span>{module.quizDTO.title} (30 min)</span>
-                </li>
+                {module.quizDTO ? (
+                  <li>
+                    <span>{module.quizDTO.title} (30 min)</span>
+                  </li>
+                ) : (
+                  <p>No quizzes available.</p>
+                )}
               </ul>
             </div>
           </div>

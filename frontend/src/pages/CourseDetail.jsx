@@ -18,7 +18,7 @@ const CourseDetail = () => {
   const [loading, setLoading] = useState(true);
   const [incomingCourse, setIncomingCourse] = useState(location.state.course);
   const [course, setCourse] = useState(null);
-  const [progress, setProgress] = useState(44);
+  const [progress, setProgress] = useState(0);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [showPayment, setShowPayment] = useState(false);
   const [isEnrolled, setIsEnrolled] = useState(false);
@@ -40,14 +40,35 @@ const CourseDetail = () => {
     };
 
     fetchCourseData();
-  }, [incomingCourse.id]);
+  });
+
+  useEffect(() => {
+    if (user && incomingCourse) {
+      const fetchProgressData = async () => {
+        try {
+          const response = await axios.get(
+            `progress/${user.userId}/${incomingCourse.id}`
+          );
+          const progressData = await response.data;
+
+          setProgress(progressData.percentage);
+
+          console.log("Progress data:", progressData);
+        } catch (error) {
+          console.error("Error fetching progress data:", error);
+        }
+      };
+
+      fetchProgressData();
+    }
+  });
 
   useEffect(() => {
     // Check if the current course ID is present in enrolledCourses
     setIsEnrolled(
       enrolledCourses.some((course) => course.courseId === incomingCourse.id)
     );
-  }, [enrolledCourses, incomingCourse.id]);
+  });
 
   useEffect(() => {
     const fetchEnrolledCourses = async () => {
