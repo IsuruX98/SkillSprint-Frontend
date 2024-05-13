@@ -67,11 +67,28 @@ const CourseDetail = () => {
     setShowPayment(true);
   };
 
-  const handlePaymentSuccess = () => {
-    setPaymentSuccess(true);
-    setIsEnrolled(true);
-    // Update local storage to reflect enrollment status
-    localStorage.setItem("enrollmentStatus", "enrolled");
+  const handlePaymentSuccess = async () => {
+    try {
+      setPaymentSuccess(true);
+      setIsEnrolled(true);
+      // Update local storage to reflect enrollment status
+      localStorage.setItem("enrollmentStatus", "enrolled");
+
+      // Post user progress
+      const response = await axios.post(`progress`, {
+        userId: user.userId, // Assuming user.id is available from your authentication context
+        courseId: course.id,
+        noOfModules: course.moduleResponseDTOList.length,
+        percentage: 0,
+        isDone: Array(course.moduleResponseDTOList.length).fill(false),
+      });
+
+      // Handle progress posting success
+      SuccessNotification("Enrollment Successful");
+    } catch (error) {
+      console.error("Error posting user progress:", error);
+      ErrorNotification("Progress Tracking Failed");
+    }
   };
 
   // Run the logic when payment success and enrollment are true
