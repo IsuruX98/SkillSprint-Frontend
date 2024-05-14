@@ -207,7 +207,7 @@ const UserProfileModal = ({ onClose, logout }) => {
             </div>
 
             {/* Enrolled courses section */}
-            {!(isAdmin || isInstructor) ? (
+            {!(isAdmin || isInstructor || currentCourses) ? (
               <>
                 {" "}
                 <div className="mb-4">
