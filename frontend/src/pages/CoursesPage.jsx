@@ -13,7 +13,7 @@ const CoursesPage = () => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("course-controller/all/");
+        const response = await axios.get("course-controller/all-approved/");
         setCourses(response.data);
         setLoading(false);
       } catch (error) {

@@ -3,7 +3,7 @@ import { FaDollarSign, FaUserAlt } from "react-icons/fa";
 import { BsFillStarFill } from "react-icons/bs";
 import ModuleDetails from "../components/ModuleDetails/ModuleDetails";
 import Payment from "../components/Payment/Payment";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
 import { useAuth } from "../context/authContext";
@@ -15,7 +15,16 @@ import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 
 const CourseDetail = () => {
-  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { user, authLoading } = useAuth();
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/");
+      ErrorNotification("Please log in to access");
+    }
+  }, [authLoading, user, navigate]);
+
   const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [incomingCourse, setIncomingCourse] = useState(location.state.course);

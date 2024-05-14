@@ -81,6 +81,8 @@ const CourseDetails = ({ course }) => {
     course ? course.status : null
   );
 
+  console.log(courseData);
+
   useEffect(() => {
     const fetchCourseData = async () => {
       setLoading(true);
