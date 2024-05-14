@@ -85,32 +85,31 @@ const Courses = ({ handleTabChange, setSelectedCourse }) => {
         <div className="overflow-x-auto">
           <table className="w-full shadow-md rounded-xl">
             <thead>
-              <tr className="">
-                <th className="p-3 text-left">Image</th>
-                <th className="p-3 text-left">Title</th>
-                <th className="p-3 text-left">Category ID</th>
-                <th className="p-3 text-left">Level</th>
-                <th className="p-3 text-left">Price</th>
-                <th className="p-3 text-left">Status</th>{" "}
-                {/* Add status header */}
-                <th className="p-3 text-center">Action</th>
+              <tr className="text-center">
+                <th className="p-3">Image</th>
+                <th className="p-3">Title</th>
+                <th className="p-3">Category ID</th>
+                <th className="p-3">Level</th>
+                <th className="p-3">Price</th>
+                <th className="p-3">Status</th> {/* Add status header */}
+                <th className="p-3">Action</th>
               </tr>
             </thead>
             <tbody>
               {displayedCourses.map((course) => (
                 <tr key={course.id} className="border-t hover:bg-gray-100">
-                  <td className="p-3">
+                  <td className="p-3 flex justify-center">
                     <img
                       src={course.coverImgUrl}
                       alt={course.courseName}
                       className="w-24 h-16 object-cover"
                     />
                   </td>
-                  <td className="p-3">{course.courseName}</td>
-                  <td className="p-3">{course.categoryId}</td>
-                  <td className="p-3">{course.level}</td>
-                  <td className="p-3">$ {course.price}</td>
-                  <td className="p-3">
+                  <td className="p-3 text-center">{course.courseName}</td>
+                  <td className="p-3 text-center">{course.categoryId}</td>
+                  <td className="p-3 text-center">{course.level}</td>
+                  <td className="p-3 text-center">$ {course.price}</td>
+                  <td className="p-3 text-center">
                     <span
                       className={`inline-block px-2 py-1 rounded ${
                         course.status === "PENDING"
@@ -125,14 +124,13 @@ const Courses = ({ handleTabChange, setSelectedCourse }) => {
                       {course.status}
                     </span>
                   </td>
-
-                  <td className="p-3">
-                    <button
-                      className="bg-blue-500 text-white px-4 py-1 rounded"
+                  <td className="p-3 text-center">
+                    <span
+                      className="bg-blue-500 text-white px-4 py-2 rounded transition duration-300 ease-in-out hover:bg-blue-600 transform hover:-translate-y-1 hover:scale-110"
                       onClick={() => handleViewDetails(course)}
                     >
                       View
-                    </button>
+                    </span>
                   </td>
                 </tr>
               ))}

@@ -8,10 +8,15 @@ import {
   SuccessNotification,
   ErrorNotification,
 } from "../../notifications/notifications";
+import { useNavigate } from "react-router-dom";
 
 const AuthModal = ({ isOpen, onClose, mode }) => {
   const [isLogin, setIsLogin] = useState(mode === "login");
-  const { register, login } = useAuth();
+  const { register, login, user } = useAuth();
+
+  console.log(user);
+
+  const navigate = useNavigate();
   // const register = () => {};
   // const login = () => {};
   const [formData, setFormData] = useState({
@@ -45,8 +50,31 @@ const AuthModal = ({ isOpen, onClose, mode }) => {
 
       if (isLogin) {
         const response = await login(requestData);
-        if (response.success) {
+        console.log("response", response);
+        if (
+          response.success &&
+          response.data.content.user.userType == "admin"
+        ) {
           SuccessNotification("Logged in successfully");
+
+          navigate("/admin");
+
+          onClose();
+        } else if (
+          response.success &&
+          response.data.content.user.userType == "instructor"
+        ) {
+          SuccessNotification("Logged in successfully");
+
+          navigate("/instructor");
+
+          onClose();
+        } else if (
+          response.success &&
+          response.data.content.user.userType == "student"
+        ) {
+          SuccessNotification("Logged in successfully");
+
           onClose();
         } else {
           console.log(response.error);

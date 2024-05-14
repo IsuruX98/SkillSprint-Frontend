@@ -12,12 +12,12 @@ const InstructorHome = () => {
   const navigate = useNavigate();
   const { user, authLoading } = useAuth();
 
-  useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/");
-      ErrorNotification("Please log in to access Instructor Dashboard.");
-    }
-  }, [authLoading, user, navigate]);
+  // useEffect(() => {
+  //   if (!authLoading && !user) {
+  //     navigate("/");
+  //     ErrorNotification("Please log in to access Instructor Dashboard.");
+  //   }
+  // }, [authLoading, user, navigate]);
 
   const handleTabChange = (label) => {
     setActiveTab(label);
