@@ -207,9 +207,8 @@ const UserProfileModal = ({ onClose, logout }) => {
             </div>
 
             {/* Enrolled courses section */}
-            {!(isAdmin || isInstructor || currentCourses) ? (
+            {!(isAdmin || isInstructor) && currentCourses.length > 0 ? (
               <>
-                {" "}
                 <div className="mb-4">
                   <h3 className="text-lg font-semibold mb-2">
                     Enrolled Courses
@@ -238,7 +237,9 @@ const UserProfileModal = ({ onClose, logout }) => {
                   onPageChange={paginate}
                 />
               </>
-            ) : null}
+            ) : (
+              <div>No enrolled courses</div>
+            )}
 
             {/* Buttons for update and logout */}
             <div className="flex justify-between mt-5">

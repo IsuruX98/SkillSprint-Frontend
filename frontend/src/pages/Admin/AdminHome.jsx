@@ -8,7 +8,7 @@ import { ErrorNotification } from "../../notifications/notifications";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 const AdminHome = () => {
-  const [activeTab, setActiveTab] = useState("User Management");
+  const [activeTab, setActiveTab] = useState("Course Management");
   const navigate = useNavigate();
   const { user, authLoading } = useAuth();
 

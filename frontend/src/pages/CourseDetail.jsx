@@ -122,7 +122,6 @@ const CourseDetail = () => {
     }
   };
 
-  // Run the logic when payment success and enrollment are true
   useEffect(() => {
     const enrollUser = async () => {
       try {
@@ -133,6 +132,9 @@ const CourseDetail = () => {
           );
           // Handle enrollment success
           SuccessNotification("Enrollment Successful");
+
+          // Refresh the page after successful enrollment
+          window.location.reload();
         }
       } catch (error) {
         console.error("Error enrolling user:", error);
