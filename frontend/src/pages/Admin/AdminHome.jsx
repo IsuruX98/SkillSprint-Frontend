@@ -23,7 +23,7 @@ const AdminHome = () => {
     setActiveTab(label);
   };
 
-  const tabs = ["User Management", "Course Management", "Payment Management"];
+  const tabs = ["Course Management", "Payment Management", "User Management"];
 
   const renderTabs = () => {
     return tabs.map((label) => (
@@ -43,12 +43,12 @@ const AdminHome = () => {
 
   const renderContent = () => {
     switch (activeTab) {
-      case "User Management":
-        return <UserManagement />;
       case "Course Management":
         return <CourseManagement />;
       case "Payment Management":
         return <PaymentManagement />;
+      case "User Management":
+        return <UserManagement />;
       default:
         return null;
     }

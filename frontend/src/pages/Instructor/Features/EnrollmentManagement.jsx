@@ -6,6 +6,8 @@ const EnrollmentManagement = () => {
   const [enrollments, setEnrollments] = useState([]);
   const [enrollmentDetails, setEnrollmentDetails] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     const fetchEnrollments = async () => {
@@ -56,9 +58,24 @@ const EnrollmentManagement = () => {
     fetchEnrollmentDetails();
   }, [enrollments]);
 
-  const sendMessage = (userName) => {
-    // Logic to send a message to a user
-    console.log(`Sending message to ${userName}...`);
+  const openModal = (email) => {
+    setSelectedUser(email);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+  const sendMessage = () => {
+    const subject = document.getElementById("emailSubject").value;
+    const body = document.getElementById("emailBody").value;
+    const mailtoLink = `mailto:${selectedUser}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+
+    window.location.href = mailtoLink;
+    closeModal(); // Close modal after sending email
   };
 
   return (
@@ -91,15 +108,72 @@ const EnrollmentManagement = () => {
                   <td className="p-3 flex justify-center">
                     <button
                       className="bg-blue-500 text-sm text-white px-2 py-2 rounded-md shadow-md hover:bg-blue-600"
-                      onClick={() => sendMessage(enrollment.userName)}
+                      onClick={() => openModal(enrollment.email)}
                     >
-                      Send Message
+                      Send a Mail
                     </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+      {showModal && (
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg max-w-md w-full">
+            <div className="p-8">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Compose Email
+              </h3>
+              <div className="mb-4">
+                <label
+                  htmlFor="emailSubject"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Subject
+                </label>
+                <input
+                  type="text"
+                  name="emailSubject"
+                  id="emailSubject"
+                  className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-50 px-3 py-2"
+                  placeholder="Enter subject..."
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="emailBody"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Body
+                </label>
+                <textarea
+                  id="emailBody"
+                  name="emailBody"
+                  rows="3"
+                  className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border border-gray-300 rounded-md bg-gray-50 px-3 py-2"
+                  placeholder="Enter message..."
+                ></textarea>
+              </div>
+            </div>
+            <div className="bg-gray-50 px-4 py-3 flex flex-col sm:flex-row justify-end">
+              <button
+                type="button"
+                className="w-full sm:w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mb-2 sm:mb-0 sm:mr-3"
+                onClick={sendMessage}
+              >
+                Send
+              </button>
+              <button
+                type="button"
+                className="w-full sm:w-auto inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                onClick={closeModal}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
