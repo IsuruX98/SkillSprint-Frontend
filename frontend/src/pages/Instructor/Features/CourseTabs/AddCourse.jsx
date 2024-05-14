@@ -105,7 +105,7 @@ const AddCourse = () => {
         price: 0,
         level: "",
         skillgained: [],
-        instructorId: "77654467898654579",
+        instructorId: user.userId,
         file: null,
       });
     } catch (error) {
