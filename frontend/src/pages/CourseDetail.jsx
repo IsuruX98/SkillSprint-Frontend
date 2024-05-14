@@ -131,6 +131,7 @@ const CourseDetail = () => {
           const response = await axios.post(
             `course-enrollment/${course.id}?courseName=${course.courseName}`
           );
+          setIsEnrolled(true);
           // Handle enrollment success
           SuccessNotification("Enrollment Successful");
         }
