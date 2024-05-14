@@ -72,9 +72,7 @@ const UserManagement = () => {
           onChange={handleSearch}
           className="px-4 py-2 border border-gray-300 rounded-xl mr-2"
         />
-        <button className="bg-blue-500 text-white px-4 py-2 rounded">
-          Add User
-        </button>
+        
       </div>
       {loading ? (
         <LoadingSpinner />
