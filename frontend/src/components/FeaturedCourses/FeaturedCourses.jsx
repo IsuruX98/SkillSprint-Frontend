@@ -32,6 +32,13 @@ const FeaturedCourses = () => {
     navigate("/details", { state: { course } }); // Navigate to details page with course object
   };
 
+  const trimDescription = (description, maxLength) => {
+    if (description.length > maxLength) {
+      return description.substring(0, maxLength) + "...";
+    }
+    return description;
+  };
+
   return (
     <div id="Featured" className="pb-20 pt-32 lg:px-32 px-12">
       <div className="max-w-6xl mx-auto">
@@ -61,7 +68,9 @@ const FeaturedCourses = () => {
               <h4 className="text-dark text-lg font-semibold mb-2">
                 {course.courseName}
               </h4>
-              <p className="text-body-color">{course.description}</p>
+              <p className="text-body-color">
+                {trimDescription(course.description, 150)}
+              </p>
             </div>
           ))}
         </div>

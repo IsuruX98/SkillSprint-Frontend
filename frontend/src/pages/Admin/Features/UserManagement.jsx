@@ -12,7 +12,7 @@ const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [displayedUsers, setDisplayedUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(5); // Number of users per page
+  const [usersPerPage] = useState(10); // Number of users per page
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -72,7 +72,6 @@ const UserManagement = () => {
           onChange={handleSearch}
           className="px-4 py-2 border border-gray-300 rounded-xl mr-2 w-full"
         />
-        
       </div>
       {loading ? (
         <LoadingSpinner />

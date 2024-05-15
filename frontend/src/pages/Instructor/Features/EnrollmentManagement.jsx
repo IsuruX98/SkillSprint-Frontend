@@ -30,22 +30,48 @@ const EnrollmentManagement = () => {
     const fetchEnrollmentDetails = async () => {
       try {
         setLoading(true);
-        const userDetails = [];
-        for (const enrollment of enrollments) {
+
+        const userPromises = enrollments.map(async (enrollment) => {
           const userResponse = await axios.get(
             `users/getUser/${enrollment.userId}`
           );
-          const courseResponse = await axios.get(
-            `course-controller/${enrollment.courseId}`
-          );
-          userDetails.push({
-            id: enrollment.id,
+          return {
+            userId: enrollment.userId,
             userName: userResponse.data.userName,
             email: userResponse.data.email,
             mobile: userResponse.data.contactNo,
+          };
+        });
+        const usersData = await Promise.all(userPromises);
+
+        const coursePromises = enrollments.map(async (enrollment) => {
+          const courseResponse = await axios.get(
+            `course-controller/${enrollment.courseId}`
+          );
+          return {
+            courseId: enrollment.courseId,
             courseName: courseResponse.data.courseName,
+          };
+        });
+        const coursesData = await Promise.all(coursePromises);
+
+        const userDetails = [];
+        enrollments.forEach((enrollment, index) => {
+          const userData = usersData.find(
+            (user) => user.userId === enrollment.userId
+          );
+          const courseData = coursesData.find(
+            (course) => course.courseId === enrollment.courseId
+          );
+          userDetails.push({
+            id: enrollment.id,
+            userName: userData.userName,
+            email: userData.email,
+            mobile: userData.mobile,
+            courseName: courseData.courseName,
           });
-        }
+        });
+
         setEnrollmentDetails(userDetails);
         setLoading(false);
       } catch (error) {

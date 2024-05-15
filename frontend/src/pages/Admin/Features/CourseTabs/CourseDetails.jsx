@@ -14,7 +14,7 @@ const ModuleComponent = ({ module }) => {
       {module.videoDTOList &&
         module.videoDTOList.map((video, index) => (
           <div key={index} className="mb-4">
-            <h4 className="text-base font-semibold">{video.title}</h4>
+            <h4 className="text-base font-semibold mb-6">{video.title}</h4>
             <video controls className="w-full" key={video.title}>
               <source src={video.url} type="video/mp4" />
               Your browser does not support the video tag.
@@ -25,7 +25,7 @@ const ModuleComponent = ({ module }) => {
       {module.readingDTOList &&
         module.readingDTOList.map((reading, index) => (
           <div key={index} className="mb-4">
-            <h4 className="text-lg font-semibold my-5">{reading.title}</h4>
+            <h4 className="text-lg font-medium mb-2">{reading.title}</h4>
             <div
               className="prose"
               dangerouslySetInnerHTML={{ __html: reading.description }}
@@ -35,7 +35,7 @@ const ModuleComponent = ({ module }) => {
       {/* Render quiz */}
       {module.quizDTO && (
         <div className="mb-4">
-          <h4 className="text-base font-semibold">{module.quizDTO.title}</h4>
+          <h4 className="text-lg font-medium mb-2">{module.quizDTO.title}</h4>
           <p className="text-sm text-gray-600">{module.quizDTO.description}</p>
           <p className="text-sm text-gray-500 mt-5">Duration: 30 mins</p>
           {/* Render questions */}
@@ -145,8 +145,10 @@ const CourseDetails = ({ course }) => {
           </div>
           <div className="mb-6">
             <p className="text-lg font-semibold">Title:</p>
-            <p className="text-base">{courseData.courseName}</p>
+            <p className="text-2xl font-bold">{courseData.courseName}</p>
           </div>
+          <h3 className="text-xl font-medium mb-2">Module Details</h3>
+          <hr className="mb-6" />
           {/* Render modules */}
           {courseData.moduleResponseDTOList ? (
             courseData.moduleResponseDTOList.map((module, index) => (
