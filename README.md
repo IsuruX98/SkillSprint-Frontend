@@ -2,7 +2,7 @@
 
 Welcome to the SkillSprint frontend repository! This repository contains the frontend codebase for SkillSprint, an interactive platform designed to enhance skills through engaging courses. The frontend is built using React and styled using Tailwind CSS.
 
-## Getting Started
+## Getting Started 
 
 To begin working on the SkillSprint frontend, follow these steps: 
 
