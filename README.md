@@ -4,7 +4,7 @@ Welcome to the SkillSprint frontend repository! This repository contains the fro
 
 ## Getting Started
 
-To begin working on the SkillSprint frontend, follow these steps:
+To begin working on the SkillSprint frontend, follow these steps: 
 
 1. **Clone the Repository**: 
    ```bash
