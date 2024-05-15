@@ -36,7 +36,7 @@ To build the SkillSprint frontend for production use, run the following command:
 npm run build 
 ```
 
-This will generate an optimized production build of the application in the `build` directory.
+This will generate an optimized production build of the application in the `build` directory. 
 
 ## Screenshots
 
