@@ -45,7 +45,7 @@ This will generate an optimized production build of the application in the `buil
 
 ## Contributers
 
-1. Isuru Madusanka
+1. Isuru Madusanka - IT21169380
 2. Yasiru Deshan
 3. Chamith Kavinda
-4. Sehan Arandara
+4. Sehan Arandara - IT21164330
