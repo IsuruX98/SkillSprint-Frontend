@@ -33,7 +33,7 @@ To begin working on the SkillSprint frontend, follow these steps:
 To build the SkillSprint frontend for production use, run the following command:
 
 ```bash
-npm run build
+npm run build 
 ```
 
 This will generate an optimized production build of the application in the `build` directory.
