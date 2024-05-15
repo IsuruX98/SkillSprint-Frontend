@@ -16,7 +16,7 @@ To begin working on the SkillSprint frontend, follow these steps:
    cd SkillSprint-frontend
    ```
 
-3. **Install Dependencies**: 
+3. **Install Dependencies**:  
    ```bash
    npm install
    ```
